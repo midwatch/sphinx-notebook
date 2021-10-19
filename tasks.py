@@ -109,7 +109,7 @@ def bumpversion(ctx, part):
     if part not in ['major', 'minor', 'patch']:
         raise Failure('Not a valid part')
 
-    ctx.run(f'poetry run bump2version {part}')
+    ctx.run(f'poetry run bump2version --no-tag {part}')
 
 
 @task(pre=[clean_build, clean_python])
@@ -174,5 +174,5 @@ scm = Collection()
 scm.add_task(scm_push, name="push")
 scm.add_task(scm_status, name="status")
 
-ns = Collection(build, bumpversion, clean, format, init, lint, test)
+ns = Collection(build, bumpversion, clean, format, init, lint, release, test)
 ns.add_collection(scm, name="scm")

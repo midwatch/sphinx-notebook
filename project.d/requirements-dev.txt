@@ -1,0 +1,7 @@
+build-essential
+git
+git-flow
+python3-dev
+python3-pip
+python3-testresources
+tig

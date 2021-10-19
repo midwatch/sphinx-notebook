@@ -174,5 +174,5 @@ scm = Collection()
 scm.add_task(scm_push, name="push")
 scm.add_task(scm_status, name="status")
 
-ns = Collection(build, bumpversion, clean, format, init, lint, test)
+ns = Collection(build, bumpversion, clean, format, init, lint, release, test)
 ns.add_collection(scm, name="scm")

@@ -23,6 +23,8 @@ packages = [
 [tool.poetry.dependencies]
 click = "*"
 python = "^3.8"
+nanoid = "^2.0.0"
+anytree = "^2.8.0"
 
 [tool.poetry.dev-dependencies]
 bump2version = "*"

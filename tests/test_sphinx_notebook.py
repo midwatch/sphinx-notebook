@@ -2,8 +2,7 @@
 """Tests for `sphinx_notebook` package."""
 # pylint: disable=redefined-outer-name
 
-import pytest
-
+# import pytest
 from click.testing import CliRunner
 
 from sphinx_notebook import cli

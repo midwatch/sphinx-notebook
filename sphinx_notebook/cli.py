@@ -9,6 +9,7 @@ import sphinx_notebook
 
 SRC_DIR = Path('tests/fixtures/notes')
 
+
 @click.command()
 def main():
     """Console script for sphinx_notebook."""

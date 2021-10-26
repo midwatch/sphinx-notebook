@@ -96,5 +96,5 @@ def render_index(root, template, out):
 
     :return: None
     """
-    out.write(template.render())
-    out.write('\n')
+    nodes = [node for node in anytree.PreOrderIter(root) if node.depth]
+    out.write(template.render(nodes=nodes))

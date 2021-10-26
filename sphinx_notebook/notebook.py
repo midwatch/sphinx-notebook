@@ -79,7 +79,10 @@ def get_tree(root_dir):
     :return: Tree root node
     :rtype: class: anytree.Node
     """
-    notes = [Note(root_dir=root_dir, path=path) for path in root_dir.glob('**/*.rst')]
+    notes = [
+        Note(root_dir=root_dir, path=path)
+        for path in root_dir.glob('**/*.rst')
+    ]
     notes.sort()
 
     return _create_tree(notes)

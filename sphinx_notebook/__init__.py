@@ -15,9 +15,6 @@ __version__ = '0.1.0'
 SEPERATORS = ['', '=', '-', '~']
 
 
-
-
-
 def _render_table(leafs, fd_out):
     """Render a table of leafs as rst table."""
     if not leafs:

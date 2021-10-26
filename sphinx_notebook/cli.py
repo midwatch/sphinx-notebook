@@ -22,17 +22,6 @@ def main():
     # click.echo("Replace this message by putting your code into "
     #            "sphinx_notebook.cli.main")
     # click.echo("See click documentation at https://click.palletsprojects.com/")
-    """
-    from sphinx_notebook inport notebook
-
-    root = notebook.get_tree(SRC_DIR)
-    notebook.update_tree(root, config) # future
-
-    with Path('build/rst/index.rst').open('w', encoding='utf8') as out:
-        notebook.render_index(root, template, out)
-
-    notebook.add_note(path, template='xxx.rst')
-    """
     root = notebook.get_tree(ROOT_DIR)
 
     output = io.StringIO()

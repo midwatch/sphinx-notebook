@@ -17,7 +17,10 @@ def main():
     # click.echo("Replace this message by putting your code into "
     #            "sphinx_notebook.cli.main")
     # click.echo("See click documentation at https://click.palletsprojects.com/")
-    notes = [sphinx_notebook.Note(src_dir=SRC_DIR, path=path) for path in SRC_DIR.glob('**/*.rst')]
+    notes = [
+        sphinx_notebook.Note(src_dir=SRC_DIR, path=path)
+        for path in SRC_DIR.glob('**/*.rst')
+    ]
     notes.sort()
 
     # for note in notes:

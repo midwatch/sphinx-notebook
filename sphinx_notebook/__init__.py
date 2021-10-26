@@ -1,9 +1,8 @@
 """Top-level package for Sphinx Notebook."""
 
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
-from dataclasses import dataclass
-from dataclasses import field
 
 import anytree
 
@@ -17,19 +16,23 @@ SEPERATORS = ['', '=', '-', '~']
 @dataclass(order=True)
 class Note:
     """Class for importing note files."""
+
     path: Path = field(compare=True)
     src_dir: Path
 
     def __str__(self):
+        """Return self.path for __str__."""
         return self.path
 
     @property
     def parts(self):
+        """Return self.path.parts."""
         return self.path.relative_to(self.src_dir).parts
 
     @property
     def ref_id(self):
-        with self.path.open() as fd_in:
+        """Return note ref_id in note header."""
+        with self.path.open(encoding="utf-8") as fd_in:
             ref = re.findall(r'\.\. _[\S]*', fd_in.read())[0]
             ref = ref[4:-1]
 
@@ -37,12 +40,12 @@ class Note:
 
     @property
     def title(self):
+        """Return note title."""
         return self.path.stem
 
 
 def _render_table(leafs, fd_out):
     """Render a table of leafs as rst table."""
-
     if not leafs:
         return
 
@@ -74,7 +77,10 @@ def create_tree(notes):
         for part in note.parts:
             if not anytree.find_by_attr(root, part):
                 if '.rst' in part:
-                    parent = anytree.Node(part, parent=parent, title=note.title, ref_id=note.ref_id)
+                    parent = anytree.Node(part,
+                                          parent=parent,
+                                          title=note.title,
+                                          ref_id=note.ref_id)
 
                 else:
                     parent = anytree.Node(part, parent=parent)
@@ -88,7 +94,7 @@ def create_tree(notes):
 
 
 def render_index(root, fd_out):
-    """Render notebook tree into index.rst
+    """Render notebook tree into index.rst.
 
     :param root: notebook tree root node
     :type root: class: anytree.Node

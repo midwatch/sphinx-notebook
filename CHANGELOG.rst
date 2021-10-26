@@ -2,6 +2,12 @@
 Changelog
 =======
 
+0.2.0 (2021-10-26)
+------------------
+
+* Render sphinx notebook to a default index.rst
+
+
 0.1.0 (2021-10-19)
 ------------------
 

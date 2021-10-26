@@ -23,11 +23,11 @@ My Notebook
 .. list-table::
 
 {% for row in node.children | selectattr("is_leaf") | batch(4) -%}
-{% for column in row -%}
+{% for col in row -%}
 {% if loop.first %}
-{{ "\t * - %s"|format(column.title)}}
+{{ "\t * - :ref:`%s <%s>"|format(col.title, col.ref_id)}}
 {% else %}
-{{ "\t   - %s"|format(column.title)}}
+{{ "\t   - :ref:`%s <%s>"|format(col.title, col.ref_id)}}
 {% endif %}
 {% endfor %}
 

@@ -6,6 +6,8 @@ from pathlib import Path
 
 import anytree
 
+from . import notebook
+
 __author__ = """Justin Stout"""
 __email__ = 'midwatch@jstout.us'
 __version__ = '0.1.0'
@@ -13,35 +15,7 @@ __version__ = '0.1.0'
 SEPERATORS = ['', '=', '-', '~']
 
 
-@dataclass(order=True)
-class Note:
-    """Class for importing note files."""
 
-    path: Path = field(compare=True)
-    src_dir: Path
-
-    def __str__(self):
-        """Return self.path for __str__."""
-        return self.path
-
-    @property
-    def parts(self):
-        """Return self.path.parts."""
-        return self.path.relative_to(self.src_dir).parts
-
-    @property
-    def ref_id(self):
-        """Return note ref_id in note header."""
-        with self.path.open(encoding="utf-8") as fd_in:
-            ref = re.findall(r'\.\. _[\S]*', fd_in.read())[0]
-            ref = ref[4:-1]
-
-            return ref
-
-    @property
-    def title(self):
-        """Return note title."""
-        return self.path.stem
 
 
 def _render_table(leafs, fd_out):

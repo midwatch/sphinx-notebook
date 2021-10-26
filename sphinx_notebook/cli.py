@@ -5,10 +5,16 @@ import sys
 from pathlib import Path
 
 import click
+from jinja2 import Environment, PackageLoader, select_autoescape
 
-import sphinx_notebook
+from sphinx_notebook import notebook
 
-SRC_DIR = Path('tests/fixtures/notes')
+ROOT_DIR = Path('tests/fixtures/notes')
+
+ENV = Environment(
+    loader=PackageLoader("sphinx_notebook"),
+    autoescape=select_autoescape()
+    )
 
 
 @click.command()
@@ -17,22 +23,24 @@ def main():
     # click.echo("Replace this message by putting your code into "
     #            "sphinx_notebook.cli.main")
     # click.echo("See click documentation at https://click.palletsprojects.com/")
-    notes = [
-        sphinx_notebook.Note(src_dir=SRC_DIR, path=path)
-        for path in SRC_DIR.glob('**/*.rst')
-    ]
-    notes.sort()
+    """
+    from sphinx_notebook inport notebook
 
-    # for note in notes:
-    #     print(f'{note.title} - {note.ref_id}')
+    root = notebook.get_tree(SRC_DIR)
+    notebook.update_tree(root, config) # future
 
-    root = sphinx_notebook.create_tree(notes)
+    with Path('build/rst/index.rst').open('w', encoding='utf8') as out:
+        notebook.render_index(root, template, out)
+
+    notebook.add_note(path, template='xxx.rst')
+    """
+    root = notebook.get_tree(ROOT_DIR)
 
     output = io.StringIO()
-    sphinx_notebook.render_index(root, output)
+    notebook.render_index(root, ENV.get_template("index.rst"), output)
     output.seek(0)
 
-    print(output.read())
+    click.echo(output.read())
 
     return 0
 

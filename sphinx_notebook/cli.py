@@ -9,27 +9,27 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from sphinx_notebook import notebook
 
-ROOT_DIR = Path('tests/fixtures/notes')
-
 ENV = Environment(loader=PackageLoader("sphinx_notebook"),
                   autoescape=select_autoescape(),
                   trim_blocks=True)
 
 
 @click.command()
-def main():
-    """Console script for sphinx_notebook."""
-    # click.echo("Replace this message by putting your code into "
-    #            "sphinx_notebook.cli.main")
-    # click.echo("See click documentation at https://click.palletsprojects.com/")
-    root = notebook.get_tree(ROOT_DIR)
+@click.argument('src')
+@click.argument('dst')
+def main(src, dst):
+    """Render an index.rst file for a sphinx based notebook.
 
-    output = io.StringIO()
-    notebook.render_index(root, ENV.get_template("index.rst"), output)
-    output.seek(0)
+    SRC: path to source directory (eg notebook/)
 
-    # click.echo(output.read())
-    print(output.read())
+    DST: path to index.rst (eg build/src/index.rst)
+    """
+    root_dir = Path(src)
+    output = Path(dst)
+    root = notebook.get_tree(root_dir)
+
+    with output.open(encoding='utf-8') as out:
+        notebook.render_index(root, ENV.get_template("index.rst"), out)
 
     return 0
 

@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "sphinx_notebook"
-version = "0.2.0"
+version = "0.2.1"
 homepage = "https://github.com/midwatch/sphinx_notebook"
 description = "Top-level package for Sphinx Notebook."
 authors = ["Justin Stout <midwatch@jstout.us>"]
@@ -25,7 +25,7 @@ click = "*"
 python = "^3.8"
 nanoid = "^2.0.0"
 anytree = "^2.8.0"
-Jinja2 = "^3.0.2"
+Jinja2 = "^2.10.1"
 
 [tool.poetry.dev-dependencies]
 bump2version = "*"

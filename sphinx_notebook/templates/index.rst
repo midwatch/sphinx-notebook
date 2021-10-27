@@ -22,16 +22,18 @@ My Notebook
 {% if node.children | selectattr("is_leaf") | list | count -%}
 .. list-table::
 
-{% for row in node.children | selectattr("is_leaf") | batch(4) -%}
+{% for row in node.children | selectattr("is_leaf") | batch(4, '') -%}
 {% for col in row -%}
 {% if loop.first %}
-{{ "\t * - :ref:`%s <%s>"|format(col.title, col.ref_id)}}
+{{ "    * - :ref:`%s <%s>`"|format(col.title, col.ref_id) }}
+{% elif col == '' %}
+{{ "      - " }}
 {% else %}
-{{ "\t   - :ref:`%s <%s>"|format(col.title, col.ref_id)}}
+{{ "      - :ref:`%s <%s>`"|format(col.title, col.ref_id) }}
 {% endif %}
-{% endfor %}
+{%- endfor %}
 
-{% endfor %}
+{%- endfor %}
 
 {% endif %}
 {% endif %}

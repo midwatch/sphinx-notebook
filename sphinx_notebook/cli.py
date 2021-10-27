@@ -28,7 +28,7 @@ def main(src, dst):
     output = Path(dst)
     root = notebook.get_tree(root_dir)
 
-    with output.open(encoding='utf-8') as out:
+    with output.open(encoding='utf-8', mode='w') as out:
         notebook.render_index(root, ENV.get_template("index.rst"), out)
 
     return 0

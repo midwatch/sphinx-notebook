@@ -2,6 +2,12 @@
 Changelog
 =======
 
+0.2.2 (2021-10-27)
+------------------
+
+* Add missing write mode to open output file
+
+
 0.2.1 (2021-10-26)
 ------------------
 

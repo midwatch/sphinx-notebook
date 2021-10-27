@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "sphinx_notebook"
-version = "0.2.1"
+version = "0.2.2"
 homepage = "https://github.com/midwatch/sphinx_notebook"
 description = "Top-level package for Sphinx Notebook."
 authors = ["Justin Stout <midwatch@jstout.us>"]

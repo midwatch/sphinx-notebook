@@ -7,6 +7,7 @@ from pathlib import Path
 import anytree
 import nanoid
 
+
 @dataclass(order=True)
 class Note:
     """Class for importing note files."""

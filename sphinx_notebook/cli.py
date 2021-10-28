@@ -66,6 +66,7 @@ def new(template_dir, name, dst):
 
     return 0
 
+
 main.add_command(build)
 main.add_command(new)
 

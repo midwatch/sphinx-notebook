@@ -2,6 +2,11 @@
 Changelog
 =======
 
+0.3.0 (2021-10-28)
+------------------
+
+* Add optional custom template directory
+
 
 0.2.3 (2021-10-27)
 ------------------

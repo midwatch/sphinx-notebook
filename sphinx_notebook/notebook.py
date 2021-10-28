@@ -41,7 +41,7 @@ class Note:
             found_line = False
 
             for line in fd_in.readlines():
-                if "=======" in line:
+                if "=======" in line:  # pylint: disable=no-else-continue
                     found_line = True
                     continue
 

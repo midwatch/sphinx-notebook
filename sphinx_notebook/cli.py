@@ -5,7 +5,8 @@ import sys
 from pathlib import Path
 
 import click
-from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoescape
+from jinja2 import (Environment, FileSystemLoader, PackageLoader,
+                    select_autoescape)
 
 from sphinx_notebook import notebook
 

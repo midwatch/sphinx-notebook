@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import anytree
+import nanoid
 
 
 @dataclass(order=True)
@@ -94,6 +95,9 @@ def render_index(root, template, out):
     :param root: notebook tree root node
     :type root: class: anytree.Node
 
+    :param template: A jinja2 template
+    :type template: class: Jinja2.Template
+
     :param fd_out: Open file like object.
     :type fd_out: File Like Object
 
@@ -101,3 +105,17 @@ def render_index(root, template, out):
     """
     nodes = [node for node in anytree.PreOrderIter(root) if node.depth]
     out.write(template.render(nodes=nodes))
+
+
+def render_note(template, out):
+    """Render a note.
+
+    :param template: A jinja2 template
+    :type template: class: Jinja2.Template
+
+    :param out: Open file like object.
+    :type out: File Like Object
+
+    :return: None
+    """
+    out.write(template.render(note_id=nanoid.generate(size=10)))

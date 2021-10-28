@@ -14,11 +14,16 @@ ENV = Environment(loader=PackageLoader("sphinx_notebook"),
                   trim_blocks=True)
 
 
+@click.group()
+def main():
+    """Empty click anchor function."""
+
+
 @click.command()
 @click.option('--template-dir', default=None, help="path to custom templates")
 @click.argument('src')
 @click.argument('dst')
-def main(template_dir, src, dst):
+def build(template_dir, src, dst):
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -37,6 +42,33 @@ def main(template_dir, src, dst):
 
     return 0
 
+
+@click.command()
+@click.option('--template-dir', default=None, help="path to custom templates")
+@click.argument('name')
+@click.argument('dst')
+def new(template_dir, name, dst):
+    """Add a new note from a template.
+
+    NAME: template name (eg note.rst.jinja)
+
+    DST: path to note.rst (eg notebook/section_1/sub_section_1/topic_1.rst)
+    """
+    if template_dir:
+        ENV.loader = FileSystemLoader(template_dir)
+
+    output = Path(dst)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    with output.open(encoding='utf-8', mode='w') as out:
+        notebook.render_note(ENV.get_template(name), out)
+
+    return 0
+
+
+main.add_command(build)
+main.add_command(new)
 
 if __name__ == "__main__":
     sys.exit(main())  # pylint: disable=no-value-for-parameter

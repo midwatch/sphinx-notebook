@@ -21,9 +21,12 @@ def main():
 
 @click.command()
 @click.option('--template-dir', default=None, help="path to custom templates")
+@click.option('--template-name',
+              default='index.rst.jinja',
+              help="Use alt index template")
 @click.argument('src')
 @click.argument('dst')
-def build(template_dir, src, dst):
+def build(template_dir, template_name, src, dst):
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -38,19 +41,20 @@ def build(template_dir, src, dst):
     root = notebook.get_tree(root_dir)
 
     with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_index(root, ENV.get_template("index.rst.jinja"), out)
+        notebook.render_index(root, ENV.get_template(template_name), out)
 
     return 0
 
 
 @click.command()
 @click.option('--template-dir', default=None, help="path to custom templates")
+@click.option('--template-name',
+              default='note.rst.jinja',
+              help="Use alt note template")
 @click.argument('name')
 @click.argument('dst')
-def new(template_dir, name, dst):
+def new(template_dir, template_name, dst):
     """Add a new note from a template.
-
-    NAME: template name (eg note.rst.jinja)
 
     DST: path to note.rst (eg notebook/section_1/sub_section_1/topic_1.rst)
     """
@@ -62,7 +66,7 @@ def new(template_dir, name, dst):
     output.parent.mkdir(parents=True, exist_ok=True)
 
     with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_note(ENV.get_template(name), out)
+        notebook.render_note(ENV.get_template(template_name), out)
 
     return 0
 

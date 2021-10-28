@@ -36,7 +36,20 @@ class Note:
     @property
     def title(self):
         """Return note title."""
-        return self.path.stem
+        title = self.path.stem
+        with self.path.open(encoding="utf-8") as fd_in:
+            found_line = False
+
+            for line in fd_in.readlines():
+                if "=======" in line:  # pylint: disable=no-else-continue
+                    found_line = True
+                    continue
+
+                elif found_line:
+                    title = line.strip()
+                    break
+
+        return title
 
 
 def _create_tree(notes):

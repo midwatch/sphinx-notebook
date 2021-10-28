@@ -16,7 +16,7 @@ ENV = Environment(loader=PackageLoader("sphinx_notebook"),
 
 @click.group()
 def main():
-    pass
+    """Empty click anchor function."""
 
 
 @click.command()

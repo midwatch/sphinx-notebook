@@ -51,7 +51,6 @@ def build(template_dir, template_name, src, dst):
 @click.option('--template-name',
               default='note.rst.jinja',
               help="Use alt note template")
-@click.argument('name')
 @click.argument('dst')
 def new(template_dir, template_name, dst):
     """Add a new note from a template.

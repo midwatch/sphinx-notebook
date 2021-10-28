@@ -16,7 +16,7 @@ My Notebook
 {% for node in nodes -%}
 
 {% if not node.is_leaf %}
-{{ node.name }}
+{{ node.name | replace('_', ' ') | title }}
 {{ headers[node.depth] }}
 
 {% if node.children | selectattr("is_leaf") | list | count -%}

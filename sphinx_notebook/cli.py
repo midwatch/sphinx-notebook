@@ -1,6 +1,5 @@
 """Console script for Sphinx Notebook."""
 
-import io
 import sys
 from pathlib import Path
 
@@ -27,7 +26,7 @@ def main(template_dir, src, dst):
     DST: path to index.rst (eg build/src/index.rst)
     """
     if template_dir:
-        template_index = ENV.loader = FileSystemLoader(template_dir)
+        ENV.loader = FileSystemLoader(template_dir)
 
     root_dir = Path(src)
     output = Path(dst)
@@ -40,4 +39,4 @@ def main(template_dir, src, dst):
 
 
 if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    sys.exit(main())  # pylint: disable=no-value-for-parameter

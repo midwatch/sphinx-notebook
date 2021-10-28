@@ -7,6 +7,7 @@ Changelog
 
 * Add optional custom template directory
 * Add create note from template
+* Delete spaces from URLs
 
 
 0.2.3 (2021-10-27)

@@ -7,6 +7,9 @@ from pathlib import Path
 import anytree
 import nanoid
 
+NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+NANOID_SIZE = 10
+
 
 @dataclass(order=True)
 class Note:
@@ -131,4 +134,5 @@ def render_note(template, out):
 
     :return: None
     """
-    out.write(template.render(note_id=nanoid.generate(size=10)))
+    note_id = nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
+    out.write(template.render(note_id))

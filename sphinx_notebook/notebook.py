@@ -7,6 +7,9 @@ from pathlib import Path
 import anytree
 import nanoid
 
+NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+NANOID_SIZE = 10
+
 
 @dataclass(order=True)
 class Note:
@@ -66,15 +69,12 @@ def _create_tree(notes):
 
     for note in notes:
         for part in note.parts:
-            if not anytree.find_by_attr(root, part):
-                if '.rst' in part:
-                    parent = anytree.Node(part,
-                                          parent=parent,
-                                          title=note.title,
-                                          ref_id=note.ref_id)
 
-                else:
-                    parent = anytree.Node(part, parent=parent)
+            if '.rst' in part:
+                anytree.Node(part, parent=parent, title=note.title, ref_id=note.ref_id)
+
+            elif not anytree.find_by_attr(root, part):
+                parent = anytree.Node(part, parent=parent)
 
             else:
                 parent = anytree.find_by_attr(root, part)
@@ -131,4 +131,5 @@ def render_note(template, out):
 
     :return: None
     """
-    out.write(template.render(note_id=nanoid.generate(size=10)))
+    note_id = nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
+    out.write(template.render(note_id))

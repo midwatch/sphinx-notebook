@@ -4,13 +4,10 @@
 from pathlib import Path
 
 # import pytest
-from anytree import RenderTree
-from anytree import search
-
+from anytree import RenderTree, search
 from click.testing import CliRunner
 
-from sphinx_notebook import cli
-from sphinx_notebook import notebook
+from sphinx_notebook import cli, notebook
 
 ID_README_3 = 'U12uzOMtKg'
 

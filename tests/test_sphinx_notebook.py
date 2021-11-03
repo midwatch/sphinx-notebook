@@ -4,10 +4,10 @@
 from pathlib import Path
 
 # import pytest
-from anytree import RenderTree, search
-from click.testing import CliRunner
+from anytree import search
+# from click.testing import CliRunner
 
-from sphinx_notebook import cli, notebook
+from sphinx_notebook import notebook
 
 ID_README_3 = 'U12uzOMtKg'
 
@@ -20,7 +20,7 @@ def test_render_sub_section():
         for path in root_dir.glob('**/*.rst')
     ]
 
-    root = notebook._create_tree(notes)
+    root = notebook._create_tree(notes)  # pylint: disable=protected-access
     assert search.find_by_attr(root, name="ref_id", value=ID_README_3)
 
 

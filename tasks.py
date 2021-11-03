@@ -165,23 +165,31 @@ def release(ctx):
 
 
 @task(clean)
-def test_smoke(ctx):
-    """Build HTML pages"""
-    ctx.run('mkdir build')
+def test_accept(ctx):
+    """Build notebook"""
+    ctx.run('mkdir -p build')
     ctx.run('cp -r tests/fixtures/notes build/rst')
-    ctx.run(f'poetry run sphinx_notebook build  tests/fixtures/notes build/rst/index.rst')
+    ctx.run('poetry run sphinx_notebook new build/rst/section_4/test_note.rst')
+    ctx.run("sed -i 's/New Note/Test Note/' build/rst/section_4/test_note.rst")
+
+    ctx.run(f'poetry run sphinx_notebook build  build/rst build/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/rst build/www')
 
 
 @task
-def test(ctx):
+def test_pytest(ctx):
     """Run tests"""
     ctx.run('poetry run pytest')
+
+
+@task(test_pytest, test_accept)
+def test(ctx):
+    """Run tests"""
 
 
 scm = Collection()
 scm.add_task(scm_push, name="push")
 scm.add_task(scm_status, name="status")
 
-ns = Collection(build, bumpversion, clean, format, init, lint, release, test, test_smoke)
+ns = Collection(build, bumpversion, clean, format, init, lint, release, test, test_accept, test_pytest)
 ns.add_collection(scm, name="scm")

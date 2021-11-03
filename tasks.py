@@ -164,6 +164,15 @@ def release(ctx):
     ctx.run("poetry publish")
 
 
+@task(clean)
+def test_smoke(ctx):
+    """Build HTML pages"""
+    ctx.run('mkdir build')
+    ctx.run('cp -r tests/fixtures/notes build/rst')
+    ctx.run(f'poetry run sphinx_notebook build  tests/fixtures/notes build/rst/index.rst')
+    ctx.run('poetry run sphinx-build -b html build/rst build/www')
+
+
 @task
 def test(ctx):
     """Run tests"""
@@ -174,5 +183,5 @@ scm = Collection()
 scm.add_task(scm_push, name="push")
 scm.add_task(scm_status, name="status")
 
-ns = Collection(build, bumpversion, clean, format, init, lint, release, test)
+ns = Collection(build, bumpversion, clean, format, init, lint, release, test, test_smoke)
 ns.add_collection(scm, name="scm")

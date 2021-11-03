@@ -132,4 +132,4 @@ def render_note(template, out):
     :return: None
     """
     note_id = nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
-    out.write(template.render(note_id))
+    out.write(template.render(note_id=note_id))

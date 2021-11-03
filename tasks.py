@@ -169,8 +169,10 @@ def test_accept(ctx):
     """Build notebook"""
     ctx.run('mkdir -p build')
     ctx.run('cp -r tests/fixtures/notes build/rst')
-    ctx.run('poetry run sphinx_notebook new build/rst/readme.rst')
-    ctx.run(f'poetry run sphinx_notebook build  tests/fixtures/notes build/rst/index.rst')
+    ctx.run('poetry run sphinx_notebook new build/rst/section_4/test_note.rst')
+    ctx.run("sed -i 's/New Note/Test Note/' build/rst/section_4/test_note.rst")
+
+    ctx.run(f'poetry run sphinx_notebook build  build/rst build/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/rst build/www')
 
 

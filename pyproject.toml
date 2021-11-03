@@ -35,6 +35,7 @@ pydocstyle = "*"
 pylint = "*"
 pytest = "*"
 yapf = "*"
+Sphinx = "*"
 
 [tool.poetry.scripts]
 sphinx_notebook = 'sphinx_notebook.cli:main'

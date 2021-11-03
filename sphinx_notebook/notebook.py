@@ -71,7 +71,10 @@ def _create_tree(notes):
         for part in note.parts:
 
             if '.rst' in part:
-                anytree.Node(part, parent=parent, title=note.title, ref_id=note.ref_id)
+                anytree.Node(part,
+                             parent=parent,
+                             title=note.title,
+                             ref_id=note.ref_id)
 
             elif not anytree.find_by_attr(root, part):
                 parent = anytree.Node(part, parent=parent)
@@ -132,4 +135,4 @@ def render_note(template, out):
     :return: None
     """
     note_id = nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
-    out.write(template.render(note_id))
+    out.write(template.render(note_id=note_id))

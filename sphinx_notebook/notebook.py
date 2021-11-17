@@ -73,11 +73,11 @@ def _create_tree(notes):
         for part in chain(['root'], note.parts[:-1]):
             parts.append(part)
 
-            if not '/'.join(parts) in nodes:
+            if '/'.join(parts) not in nodes:
                 parent = nodes['/'.join(parts[:-1])]
                 nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
 
-        anytree.Node(part,
+        anytree.Node(note,
                      parent=nodes['/'.join(parts)],
                      title=note.title,
                      ref_id=note.ref_id)

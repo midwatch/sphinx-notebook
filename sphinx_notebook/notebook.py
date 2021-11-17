@@ -2,6 +2,7 @@
 
 import re
 from dataclasses import dataclass, field
+from itertools import chain
 from pathlib import Path
 
 import anytree
@@ -64,27 +65,24 @@ def _create_tree(notes):
     :return: Tree root node.
     :rtype: anytree.Node
     """
-    root = anytree.Node('root')
-    parent = root
+    nodes = {'root': anytree.Node('root')}
 
     for note in notes:
-        for part in note.parts:
+        parts = []
 
-            if '.rst' in part:
-                anytree.Node(part,
-                             parent=parent,
-                             title=note.title,
-                             ref_id=note.ref_id)
+        for part in chain(['root'], note.parts[:-1]):
+            parts.append(part)
 
-            elif not anytree.find_by_attr(root, part):
-                parent = anytree.Node(part, parent=parent)
+            if not '/'.join(parts) in nodes:
+                parent = nodes['/'.join(parts[:-1])]
+                nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
 
-            else:
-                parent = anytree.find_by_attr(root, part)
+        anytree.Node(part,
+                     parent=nodes['/'.join(parts)],
+                     title=note.title,
+                     ref_id=note.ref_id)
 
-        parent = root
-
-    return root
+    return nodes['root']
 
 
 def get_tree(root_dir):

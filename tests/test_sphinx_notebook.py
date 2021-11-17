@@ -5,9 +5,11 @@ from pathlib import Path
 
 # import pytest
 from anytree import search
-# from click.testing import CliRunner
 
 from sphinx_notebook import notebook
+
+# from click.testing import CliRunner
+
 
 ID_README_3 = 'U12uzOMtKg'
 

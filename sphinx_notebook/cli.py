@@ -20,13 +20,14 @@ def main():
 
 
 @click.command()
+@click.option('--prune', multiple=True)
 @click.option('--template-dir', default=None, help="path to custom templates")
 @click.option('--template-name',
               default='index.rst.jinja',
               help="Use alt index template")
 @click.argument('src')
 @click.argument('dst')
-def build(template_dir, template_name, src, dst):
+def build(prune, template_dir, template_name, src, dst):
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -38,7 +39,9 @@ def build(template_dir, template_name, src, dst):
 
     root_dir = Path(src)
     output = Path(dst)
+
     root = notebook.get_tree(root_dir)
+    notebook.prune_tree(root, prune)
 
     with output.open(encoding='utf-8', mode='w') as out:
         notebook.render_index(root, ENV.get_template(template_name), out)

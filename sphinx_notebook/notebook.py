@@ -103,6 +103,12 @@ def get_tree(root_dir):
     return _create_tree(notes)
 
 
+def prune_tree(root, prune):
+
+    for node in anytree.search.findall(root, filter_=lambda node: node.name in prune):
+        node.parent = None
+
+
 def render_index(root, template, out):
     """Render notebook tree into index.rst.
 

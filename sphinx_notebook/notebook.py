@@ -104,7 +104,16 @@ def get_tree(root_dir):
 
 
 def prune_tree(root, prune):
+    """Prune nodes that shouldn't be rendered on the index page.
 
+    :param root: Root node of the notes tree
+    :type root: anytree.Node
+
+    :param prune: An tuple of node names to be pruned
+    :type prune: tuple
+
+    :return: None
+    """
     for node in anytree.search.findall(
             root, filter_=lambda node: node.name in prune):
         node.parent = None

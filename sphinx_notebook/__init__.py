@@ -10,4 +10,4 @@ from . import notebook
 
 __author__ = """Justin Stout"""
 __email__ = 'midwatch@jstout.us'
-__version__ = '0.3.4'
+__version__ = '0.4.0'

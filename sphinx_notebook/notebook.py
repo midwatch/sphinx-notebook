@@ -34,6 +34,7 @@ def _get_title(note):
 
     return title
 
+
 def get_target():
     """Create a random target ID.
 

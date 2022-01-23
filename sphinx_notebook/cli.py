@@ -18,9 +18,11 @@ ENV = Environment(loader=PackageLoader("sphinx_notebook"),
 def main():
     """Empty click anchor function."""
 
+
 @click.group()
 def new():
     """Empty click anchor function."""
+
 
 @click.command()
 @click.option('--prune', multiple=True)
@@ -74,6 +76,7 @@ def new_note(template_dir, template_name, dst):
         notebook.render_note(ENV.get_template(template_name), out)
 
     return 0
+
 
 @click.command()
 @click.option('--count', default=1, help='number of targets to generate')

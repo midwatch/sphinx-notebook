@@ -58,7 +58,6 @@ def get_tree(root_dir):
 
         parts = []
 
-
         for part in chain([root_dir.name], tmp.parts[:-1]):
             parts.append(part)
 

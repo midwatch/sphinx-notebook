@@ -35,6 +35,15 @@ def _get_title(note):
     return title
 
 
+def get_target():
+    """Create a random target ID.
+
+    :return: target id
+    :rrtype: str
+    """
+    return nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
+
+
 def get_tree(root_dir):
     """Get a tree of notes.
 
@@ -115,5 +124,5 @@ def render_note(template, out):
 
     :return: None
     """
-    note_id = nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
+    note_id = get_target()
     out.write(template.render(note_id=note_id))

@@ -19,6 +19,11 @@ def main():
     """Empty click anchor function."""
 
 
+@click.group()
+def new():
+    """Empty click anchor function."""
+
+
 @click.command()
 @click.option('--prune', multiple=True)
 @click.option('--template-dir', default=None, help="path to custom templates")
@@ -55,7 +60,7 @@ def build(prune, template_dir, template_name, src, dst):
               default='note.rst.jinja',
               help="Use alt note template")
 @click.argument('dst')
-def new(template_dir, template_name, dst):
+def new_note(template_dir, template_name, dst):
     """Add a new note from a template.
 
     DST: path to note.rst (eg notebook/section_1/sub_section_1/topic_1.rst)
@@ -72,6 +77,17 @@ def new(template_dir, template_name, dst):
 
     return 0
 
+
+@click.command()
+@click.option('--count', default=1, help='number of targets to generate')
+def new_target(count):
+    """Generate a new target using NanoID."""
+    for _ in range(count):
+        click.echo(notebook.get_target())
+
+
+new.add_command(new_note, name='note')
+new.add_command(new_target, name='target')
 
 main.add_command(build)
 main.add_command(new)

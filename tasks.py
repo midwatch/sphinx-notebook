@@ -169,7 +169,7 @@ def test_accept(ctx):
     """Build notebook"""
     ctx.run('mkdir -p build/notes')
     ctx.run('cp -r tests/fixtures/notes build/notes/rst')
-    ctx.run('poetry run sphinx_notebook new build/notes/rst/section_4/test_note.rst')
+    ctx.run('poetry run sphinx_notebook new note build/notes/rst/section_4/test_note.rst')
     ctx.run("sed -i 's/New Note/Test Note/' build/notes/rst/section_4/test_note.rst")
 
     ctx.run(f'poetry run sphinx_notebook build  build/notes/rst build/notes/rst/index.rst')
@@ -179,10 +179,10 @@ def test_accept(ctx):
     ctx.run('mkdir -p build/pruned')
     ctx.run('cp -r tests/fixtures/notes build/pruned/rst')
 
-    ctx.run('poetry run sphinx_notebook new build/pruned/rst/section_1/_include/inc_note_1.rst')
+    ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_1/_include/inc_note_1.rst')
     ctx.run("sed -i 's/New Note/Test Prun Note 1/' build/pruned/rst/section_1/_include/inc_note_1.rst")
 
-    ctx.run('poetry run sphinx_notebook new build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
+    ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
     ctx.run("sed -i 's/New Note/Test Prun Note 2/' build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst")
 
     ctx.run(f'poetry run sphinx_notebook build --prune _include build/pruned/rst build/pruned/rst/index.rst')
@@ -195,7 +195,7 @@ def test_pytest(ctx):
     ctx.run('poetry run pytest')
 
 
-@task(test_pytest, test_accept)
+@task(test_accept)
 def test(ctx):
     """Run tests"""
 

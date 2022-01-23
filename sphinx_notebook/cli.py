@@ -82,7 +82,6 @@ def new_note(template_dir, template_name, dst):
 @click.option('--count', default=1, help='number of targets to generate')
 def new_target(count):
     """Generate a new target using NanoID."""
-
     for _ in range(count):
         click.echo(notebook.get_target())
 

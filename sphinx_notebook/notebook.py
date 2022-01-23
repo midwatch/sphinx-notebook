@@ -12,77 +12,30 @@ NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 NANOID_SIZE = 10
 
 
-@dataclass(order=True)
-class Note:
-    """Class for importing note files."""
+def _get_title(note):
+    """Extract title from note.
 
-    path: Path = field(compare=True)
-    root_dir: Path
+    :param note: path not note file
+    :type note: class: `pathlib.path`
 
-    def __str__(self):
-        """Return self.path for __str__."""
-        return self.path
-
-    @property
-    def parts(self):
-        """Return self.path.parts."""
-        return self.path.relative_to(self.root_dir).parts
-
-    @property
-    def ref_id(self):
-        """Return note ref_id in note header."""
-        with self.path.open(encoding="utf-8") as fd_in:
-            ref = re.findall(r'\.\. _[\S]*', fd_in.read())[0]
-            ref = ref[4:-1]
-
-            return ref
-
-    @property
-    def title(self):
-        """Return note title."""
-        title = self.path.stem
-        with self.path.open(encoding="utf-8") as fd_in:
-            found_line = False
-
-            for line in fd_in.readlines():
-                if "=======" in line:  # pylint: disable=no-else-continue
-                    found_line = True
-                    continue
-
-                elif found_line:
-                    title = line.strip()
-                    break
-
-        return title
-
-
-def _create_tree(notes):
-    """Transform a list of objects into a tree.
-
-    :param notes: A list of Path() objects.
-    :type notes: list: `Note`
-
-    :return: Tree root node.
-    :rtype: anytree.Node
+    :return: Note title
+    :rrtype: str
     """
-    nodes = {'root': anytree.Node('root')}
+    title = note.stem
 
-    for note in notes:
-        parts = []
+    with note.open(encoding="utf-8") as fd_in:
+        found_line = False
 
-        for part in chain(['root'], note.parts[:-1]):
-            parts.append(part)
+        for line in fd_in.readlines():
+            if "=======" in line:  # pylint: disable=no-else-continue
+                found_line = True
+                continue
 
-            if '/'.join(parts) not in nodes:
-                parent = nodes['/'.join(parts[:-1])]
-                nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
+            elif found_line:
+                title = line.strip()
+                break
 
-        anytree.Node(note,
-                     parent=nodes['/'.join(parts)],
-                     title=note.title,
-                     ref_id=note.ref_id)
-
-    return nodes['root']
+    return title
 
 
 def get_tree(root_dir):
@@ -94,13 +47,31 @@ def get_tree(root_dir):
     :return: Tree root node
     :rtype: class: anytree.Node
     """
-    notes = [
-        Note(root_dir=root_dir, path=path)
-        for path in root_dir.glob('**/*.rst')
-    ]
-    notes.sort()
+    # print(root_dir)
+    # build/notes/rst
+    nodes = {root_dir.name: anytree.Node(root_dir.name)}
 
-    return _create_tree(notes)
+    for note in sorted(root_dir.glob('**/*.rst')):
+
+        tmp = note.relative_to(root_dir)
+        target = f'/{tmp.parent}/{tmp.stem}'  # /1._overview/0_readme
+
+        parts = []
+
+
+        for part in chain([root_dir.name], tmp.parts[:-1]):
+            parts.append(part)
+
+            if '/'.join(parts) not in nodes:
+                parent = nodes['/'.join(parts[:-1])]
+                nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
+
+        anytree.Node(note.name,
+                     parent=nodes['/'.join(parts)],
+                     title=_get_title(note),
+                     target=target)
+
+    return nodes[root_dir.name]
 
 
 def prune_tree(root, prune):

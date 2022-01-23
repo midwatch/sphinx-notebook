@@ -1,9 +1,6 @@
 """Main module."""
 
-import re
-from dataclasses import dataclass, field
 from itertools import chain
-from pathlib import Path
 
 import anytree
 import nanoid

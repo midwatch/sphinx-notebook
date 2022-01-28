@@ -4,9 +4,13 @@ from itertools import chain
 
 import anytree
 import nanoid
+import parse
 
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
+
+STEM_TEMPLATES = ('{group:l}_{index:d}__{name:w}', '{group:l}__{name:w}',
+                  '{index:d}__{name:w}', '{name:w}')
 
 
 def _get_title(note):
@@ -33,6 +37,25 @@ def _get_title(note):
                 break
 
     return title
+
+
+def _parse_stem(stem):
+    """Extract group from note file stem.
+
+    :param stem: Path.stem()
+    :type stem: str
+
+    :return: Note group
+    :rrtype: str
+    """
+    for template in STEM_TEMPLATES:
+        try:
+            return parse.parse(template, stem)['group']
+
+        except (KeyError, TypeError):
+            pass
+
+    return None
 
 
 def get_target():
@@ -72,6 +95,7 @@ def get_tree(root_dir):
                 nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
 
         anytree.Node(note.name,
+                     group=_parse_stem(note.stem),
                      parent=nodes['/'.join(parts)],
                      title=_get_title(note),
                      target=target)

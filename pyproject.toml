@@ -26,6 +26,7 @@ python = "^3.8"
 nanoid = "^2.0.0"
 anytree = "^2.8.0"
 Jinja2 = "^2.10.1"
+parse = "^1.19.0"
 
 [tool.poetry.dev-dependencies]
 bump2version = "*"

@@ -195,7 +195,7 @@ def test_pytest(ctx):
     ctx.run('poetry run pytest')
 
 
-@task(test_accept)
+@task(test_pytest, test_accept)
 def test(ctx):
     """Run tests"""
 

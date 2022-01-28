@@ -193,7 +193,7 @@ def test_accept(ctx):
     ctx.run('mkdir -p build/table')
     ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
 
-    ctx.run(f'poetry run sphinx_notebook build  build/table/rst build/table/rst/index.rst')
+    ctx.run(f'poetry run sphinx_notebook build  --template-name index_table.rst.jinja build/table/rst build/table/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
 
 

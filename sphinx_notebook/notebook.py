@@ -52,7 +52,6 @@ def _parse_stem(stem):
     :return: Note group
     :rrtype: str
     """
-
     for template in STEM_TEMPLATES:
         try:
             return parse.parse(template, stem)['group']
@@ -98,6 +97,7 @@ def get_tree(root_dir):
                 nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
 
         anytree.Node(note.name,
+                     group=_parse_stem(note.stem),
                      parent=nodes['/'.join(parts)],
                      title=_get_title(note),
                      target=target)

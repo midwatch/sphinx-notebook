@@ -189,6 +189,14 @@ def test_accept(ctx):
     ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
 
 
+    """Build table formatted notebook"""
+    ctx.run('mkdir -p build/table')
+    ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
+
+    ctx.run(f'poetry run sphinx_notebook build  build/table/rst build/table/rst/index.rst')
+    ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
+
+
 @task
 def test_pytest(ctx):
     """Run tests"""

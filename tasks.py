@@ -167,17 +167,17 @@ def release(ctx):
 @task(clean)
 def test_accept(ctx):
     """Build notebook"""
-    ctx.run('mkdir -p build/notes')
-    ctx.run('cp -r tests/fixtures/notes build/notes/rst')
-    ctx.run('poetry run sphinx_notebook new note build/notes/rst/section_4/test_note.rst')
-    ctx.run("sed -i 's/New Note/Test Note/' build/notes/rst/section_4/test_note.rst")
+    ctx.run('mkdir -p build/simple')
+    ctx.run('cp -r tests/fixtures/notes/simple build/simple/rst')
+    ctx.run('poetry run sphinx_notebook new note build/simple/rst/section_4/test_note.rst')
+    ctx.run("sed -i 's/New Note/Test Note/' build/simple/rst/section_4/test_note.rst")
 
-    ctx.run(f'poetry run sphinx_notebook build  build/notes/rst build/notes/rst/index.rst')
-    ctx.run('poetry run sphinx-build -b html build/notes/rst build/notes/www')
+    ctx.run(f'poetry run sphinx_notebook build  build/simple/rst build/simple/rst/index.rst')
+    ctx.run('poetry run sphinx-build -b html build/simple/rst build/simple/www')
 
     """Build pruned notebook"""
     ctx.run('mkdir -p build/pruned')
-    ctx.run('cp -r tests/fixtures/notes build/pruned/rst')
+    ctx.run('cp -r tests/fixtures/notes/simple build/pruned/rst')
 
     ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_1/_include/inc_note_1.rst')
     ctx.run("sed -i 's/New Note/Test Prun Note 1/' build/pruned/rst/section_1/_include/inc_note_1.rst")
@@ -189,13 +189,21 @@ def test_accept(ctx):
     ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
 
 
+    """Build table formatted notebook"""
+    ctx.run('mkdir -p build/table')
+    ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
+
+    ctx.run(f'poetry run sphinx_notebook build  --template-name index_table.rst.jinja build/table/rst build/table/rst/index.rst')
+    ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
+
+
 @task
 def test_pytest(ctx):
     """Run tests"""
     ctx.run('poetry run pytest')
 
 
-@task(test_accept)
+@task(test_pytest, test_accept)
 def test(ctx):
     """Run tests"""
 

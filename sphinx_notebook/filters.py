@@ -1,6 +1,7 @@
 """Template Filters."""
 from itertools import zip_longest
 
+
 def to_table(value):
 
     header = []

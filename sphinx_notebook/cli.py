@@ -7,8 +7,7 @@ import click
 from jinja2 import (Environment, FileSystemLoader, PackageLoader,
                     select_autoescape)
 
-from sphinx_notebook import notebook
-from sphinx_notebook import filters
+from sphinx_notebook import filters, notebook
 
 ENV = Environment(loader=PackageLoader("sphinx_notebook"),
                   autoescape=select_autoescape(),

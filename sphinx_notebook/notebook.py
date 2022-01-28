@@ -9,12 +9,8 @@ import parse
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
 
-STEM_TEMPLATES = (
-        '{group:l}_{index:d}__{name:w}',
-        '{group:l}__{name:w}',
-        '{index:d}__{name:w}',
-        '{name:w}'
-    )
+STEM_TEMPLATES = ('{group:l}_{index:d}__{name:w}', '{group:l}__{name:w}',
+                  '{index:d}__{name:w}', '{name:w}')
 
 
 def _get_title(note):

@@ -4,15 +4,13 @@
 
 from sphinx_notebook import notebook
 
+
 def test_parse_stem():
     """Test parse note stem."""
 
     stems = [
-        'my_note',
-        '0__my_note',
-        'checklist__my_note',
-        'checklist_0__my_note'
-        ]
+        'my_note', '0__my_note', 'checklist__my_note', 'checklist_0__my_note'
+    ]
 
     expected = [None, None, 'checklist', 'checklist']
 

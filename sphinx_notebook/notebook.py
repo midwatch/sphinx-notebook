@@ -55,6 +55,8 @@ def _parse_stem(stem):
         except (KeyError, TypeError):
             pass
 
+    return None
+
 
 def get_target():
     """Create a random target ID.

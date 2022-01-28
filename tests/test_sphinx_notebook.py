@@ -14,6 +14,6 @@ def test_parse_stem():
 
     expected = [None, None, 'checklist', 'checklist']
 
-    results = [notebook._parse_stem(x) for x in stems]
+    results = [notebook._parse_stem(x) for x in stems]  # pylint: disable=protected-access
 
     assert expected == results

@@ -3,7 +3,7 @@ from itertools import zip_longest
 
 
 def to_table(value):
-
+    """Convert the results of groupby to a table."""
     header = []
     nodes = []
 

@@ -10,8 +10,6 @@ My Notebook
     )
 %}
 
-{% macro dump_children(children) -%}
-{%- endmacro %}
 
 {% for node in nodes -%}
 
@@ -35,7 +33,11 @@ My Notebook
 {% else %}
 {% for col in row -%}
 {% if loop.first %}
+{% if col %}
 {{ "   * - :doc:`%s <%s>`"|format(col.title, col.target) }}
+{% else %}
+   * -
+{% endif %}
 {% elif not col %}
      -
 {% else %}

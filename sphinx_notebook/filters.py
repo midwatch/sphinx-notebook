@@ -1,6 +1,7 @@
 """Template Filters."""
 from itertools import zip_longest
 
+from pprint import pprint as pp
 
 def to_table(value):
     """Convert the results of groupby to a table."""

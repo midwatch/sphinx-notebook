@@ -77,8 +77,8 @@ def new_note(template_dir, template_name, dst):
         with output.open(encoding='utf-8', mode='x') as out:
             notebook.render_note(ENV.get_template(template_name), out)
 
-    except FileExistsError:
-        raise click.FileError(output, f'file exists')
+    except FileExistsError as file_exists:
+        raise click.FileError(output, 'file exists') from file_exists
 
     return 0
 

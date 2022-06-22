@@ -48,6 +48,7 @@ def build(prune, template_dir, template_name, src, dst):
 
     root = notebook.get_tree(root_dir)
     notebook.prune_tree(root, prune)
+    notebook.update_meta_data(root_dir, root)
 
     with output.open(encoding='utf-8', mode='w') as out:
         notebook.render_index(root, ENV.get_template(template_name), out)

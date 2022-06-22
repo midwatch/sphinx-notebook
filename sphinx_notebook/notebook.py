@@ -4,9 +4,23 @@ from itertools import chain
 
 import anytree
 import nanoid
+import yaml
 
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
+
+
+def _get_meta_data(meta_file):
+    """Parse meta data yaml file.
+
+    :param meta_file: meta_data file
+    :type meta_file: class: `pathlib.Path`
+
+    :return: Directory meta data
+    :rrtype: dict
+    """
+    with meta_file.open() as fd_in:
+        return yaml.safe_load(fd_in)
 
 
 def _get_title(note):
@@ -156,3 +170,24 @@ def render_note(template, out):
     """
     note_id = get_target()
     out.write(template.render(note_id=note_id))
+
+
+def update_meta_data(root_dir, root):
+    """Update directory meta data using meta.yaml file.
+
+    :param root_dir: The root directory of the notebook
+    :type root_dir: class: `pathlib.Path`
+
+    :param root: notebook tree root node
+    :type root: class: anytree.Node
+
+    :return: None
+    """
+    resolver = anytree.resolver.Resolver()
+
+    for meta_file in root_dir.glob('**/meta.yaml'):
+        meta_data = _get_meta_data(meta_file)
+
+        target = str(meta_file.relative_to(root_dir).parent)
+        node = resolver.get(root, target)
+        node.name = meta_data['name']

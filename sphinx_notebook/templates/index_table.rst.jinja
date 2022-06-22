@@ -25,9 +25,9 @@ My Notebook
 {% if loop.first %}
 {% for col in row -%}
 {% if loop.first %}
-   * - {{ col | capitalize }}
+   * - {{ col | replace('_', ' ') | title }}
 {% else %}
-     - {{ col | capitalize }}
+     - {{ col | replace('_', ' ') | title }}
 {% endif %}
 {%- endfor %}
 {% else %}

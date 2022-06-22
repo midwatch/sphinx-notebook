@@ -82,6 +82,7 @@ def new_note(template_dir, template_name, dst):
 
     return 0
 
+
 @click.command()
 @click.option('--count', default=1, help='number of targets to generate')
 def new_target(count):

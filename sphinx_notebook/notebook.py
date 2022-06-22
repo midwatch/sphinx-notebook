@@ -1,5 +1,5 @@
 """Main module."""
-
+import string
 from itertools import chain
 
 import anytree
@@ -108,7 +108,9 @@ def get_tree(root_dir):
 
             if '/'.join(parts) not in nodes:
                 parent = nodes['/'.join(parts[:-1])]
-                nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
+                display_name = string.capwords(part.replace('_', ' '))
+                nodes['/'.join(parts)] = anytree.Node(
+                    part, display_name=display_name, parent=parent)
 
         anytree.Node(note.name,
                      group=_parse_stem(note.stem),
@@ -139,7 +141,7 @@ def prune_tree(root, prune):
         node.parent = None
 
 
-def render_index(root, template, out):
+def render_index(root, title, header, template, out):
     """Render notebook tree into index.rst.
 
     :param root: notebook tree root node
@@ -153,8 +155,13 @@ def render_index(root, template, out):
 
     :return: None
     """
-    nodes = [node for node in anytree.PreOrderIter(root) if node.depth]
-    out.write(template.render(nodes=nodes))
+    ctx = {
+        'title': title,
+        'header': header,
+        'nodes': [node for node in anytree.PreOrderIter(root) if node.depth]
+    }
+
+    out.write(template.render(ctx))
 
 
 def render_note(template, out):
@@ -190,4 +197,4 @@ def update_meta_data(root_dir, root):
 
         target = str(meta_file.relative_to(root_dir).parent)
         node = resolver.get(root, target)
-        node.name = meta_data['name']
+        node.display_name = meta_data['display_name']

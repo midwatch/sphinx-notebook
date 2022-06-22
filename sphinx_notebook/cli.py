@@ -31,9 +31,11 @@ def new():
 @click.option('--template-name',
               default='index.rst.jinja',
               help="Use alt index template")
+@click.option('--title', default="My Notebook", help="Notebook title")
+@click.option('--header', default=None, help="Notebook header")
 @click.argument('src')
 @click.argument('dst')
-def build(prune, template_dir, template_name, src, dst):
+def build(prune, template_dir, template_name, title, header, src, dst):  # pylint: disable=too-many-arguments
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -51,7 +53,8 @@ def build(prune, template_dir, template_name, src, dst):
     notebook.update_meta_data(root_dir, root)
 
     with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_index(root, ENV.get_template(template_name), out)
+        notebook.render_index(root, title, header,
+                              ENV.get_template(template_name), out)
 
     return 0
 

@@ -185,7 +185,8 @@ def test_accept(ctx):
     ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
     ctx.run("sed -i 's/New Note/Test Prun Note 2/' build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst")
 
-    ctx.run(f'poetry run sphinx_notebook build --prune _include build/pruned/rst build/pruned/rst/index.rst')
+    # ctx.run(f'poetry run sphinx_notebook build --prune _include build/pruned/rst build/pruned/rst/index.rst')
+    ctx.run(f'poetry run sphinx_notebook build build/pruned/rst build/pruned/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
 
 

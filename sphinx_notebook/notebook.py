@@ -117,6 +117,10 @@ def prune_tree(root, prune):
     :return: None
     """
     for node in anytree.search.findall(
+            root, filter_=lambda node: node.name[0] == '_'):
+        node.parent = None
+
+    for node in anytree.search.findall(
             root, filter_=lambda node: node.name in prune):
         node.parent = None
 

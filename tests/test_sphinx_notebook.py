@@ -9,10 +9,11 @@ def test_parse_stem():
     """Test parse note stem."""
 
     stems = [
-        'my_note', '0__my_note', 'checklist__my_note', 'checklist_0__my_note'
+        'my_note', '0__my_note', 'checklist__my_note', 'checklist__0__my_note',
+        'two_part__0__my_note', 'two_part__my_note'
     ]
 
-    expected = [None, None, 'checklist', 'checklist']
+    expected = [None, None, 'checklist', 'checklist', 'two_part', 'two_part']
 
     results = [notebook._parse_stem(x) for x in stems]  # pylint: disable=protected-access
 

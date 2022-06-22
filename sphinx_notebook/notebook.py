@@ -4,13 +4,9 @@ from itertools import chain
 
 import anytree
 import nanoid
-import parse
 
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
-
-STEM_TEMPLATES = ('{group:l}_{index:d}__{name:w}', '{group:l}__{name:w}',
-                  '{index:d}__{name:w}', '{name:w}')
 
 
 def _get_title(note):
@@ -48,14 +44,20 @@ def _parse_stem(stem):
     :return: Note group
     :rrtype: str
     """
-    for template in STEM_TEMPLATES:
-        try:
-            return parse.parse(template, stem)['group']
+    tokens = stem.split('__')
 
-        except (KeyError, TypeError):
-            pass
+    if len(tokens) == 1:
+        return None
 
-    return None
+    if len(tokens) == 3:
+        return tokens[0]
+
+    try:
+        _ = int(tokens[0])
+        return None
+
+    except ValueError:
+        return tokens[0]
 
 
 def get_target():

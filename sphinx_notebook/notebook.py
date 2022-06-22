@@ -4,13 +4,9 @@ from itertools import chain
 
 import anytree
 import nanoid
-import parse
 
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
-
-STEM_TEMPLATES = ('{group:w}__{index:d}__{name:w}', '{group:w}__{name:w}',
-                  '{index:d}__{name:w}', '{name:w}')
 
 
 def _get_title(note):

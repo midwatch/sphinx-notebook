@@ -1,16 +1,26 @@
 """Main module."""
-
+import string
 from itertools import chain
 
 import anytree
 import nanoid
-import parse
+import yaml
 
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
 
-STEM_TEMPLATES = ('{group:l}_{index:d}__{name:w}', '{group:l}__{name:w}',
-                  '{index:d}__{name:w}', '{name:w}')
+
+def _get_meta_data(meta_file):
+    """Parse meta data yaml file.
+
+    :param meta_file: meta_data file
+    :type meta_file: class: `pathlib.Path`
+
+    :return: Directory meta data
+    :rrtype: dict
+    """
+    with meta_file.open() as fd_in:
+        return yaml.safe_load(fd_in)
 
 
 def _get_title(note):
@@ -48,14 +58,20 @@ def _parse_stem(stem):
     :return: Note group
     :rrtype: str
     """
-    for template in STEM_TEMPLATES:
-        try:
-            return parse.parse(template, stem)['group']
+    tokens = stem.split('__')
 
-        except (KeyError, TypeError):
-            pass
+    if len(tokens) == 1:
+        return None
 
-    return None
+    if len(tokens) == 3:
+        return tokens[0]
+
+    try:
+        _ = int(tokens[0])
+        return None
+
+    except ValueError:
+        return tokens[0]
 
 
 def get_target():
@@ -92,7 +108,9 @@ def get_tree(root_dir):
 
             if '/'.join(parts) not in nodes:
                 parent = nodes['/'.join(parts[:-1])]
-                nodes['/'.join(parts)] = anytree.Node(part, parent=parent)
+                display_name = string.capwords(part.replace('_', ' '))
+                nodes['/'.join(parts)] = anytree.Node(
+                    part, display_name=display_name, parent=parent)
 
         anytree.Node(note.name,
                      group=_parse_stem(note.stem),
@@ -115,11 +133,15 @@ def prune_tree(root, prune):
     :return: None
     """
     for node in anytree.search.findall(
+            root, filter_=lambda node: node.name[0] == '_'):
+        node.parent = None
+
+    for node in anytree.search.findall(
             root, filter_=lambda node: node.name in prune):
         node.parent = None
 
 
-def render_index(root, template, out):
+def render_index(root, title, header, template, out):
     """Render notebook tree into index.rst.
 
     :param root: notebook tree root node
@@ -133,8 +155,13 @@ def render_index(root, template, out):
 
     :return: None
     """
-    nodes = [node for node in anytree.PreOrderIter(root) if node.depth]
-    out.write(template.render(nodes=nodes))
+    ctx = {
+        'title': title,
+        'header': header,
+        'nodes': [node for node in anytree.PreOrderIter(root) if node.depth]
+    }
+
+    out.write(template.render(ctx))
 
 
 def render_note(template, out):
@@ -150,3 +177,24 @@ def render_note(template, out):
     """
     note_id = get_target()
     out.write(template.render(note_id=note_id))
+
+
+def update_meta_data(root_dir, root):
+    """Update directory meta data using meta.yaml file.
+
+    :param root_dir: The root directory of the notebook
+    :type root_dir: class: `pathlib.Path`
+
+    :param root: notebook tree root node
+    :type root: class: anytree.Node
+
+    :return: None
+    """
+    resolver = anytree.resolver.Resolver()
+
+    for meta_file in root_dir.glob('**/meta.yaml'):
+        meta_data = _get_meta_data(meta_file)
+
+        target = str(meta_file.relative_to(root_dir).parent)
+        node = resolver.get(root, target)
+        node.display_name = meta_data['display_name']

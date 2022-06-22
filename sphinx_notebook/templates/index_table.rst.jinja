@@ -1,21 +1,7 @@
-===================
-My Notebook
-===================
-
-{% set headers = (
-    '',
-    '========================================',
-    '----------------------------------------',
-    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    )
-%}
+{% extends "base.rst.jinja" %}
 
 
-{% for node in nodes -%}
-
-{% if not node.is_leaf %}
-{{ node.name | replace('_', ' ') | title }}
-{{ headers[node.depth] }}
+{% block section %}
 
 {% if node.children | selectattr("is_leaf") | list | count -%}
 .. list-table::
@@ -25,9 +11,9 @@ My Notebook
 {% if loop.first %}
 {% for col in row -%}
 {% if loop.first %}
-   * - {{ col | capitalize }}
+   * - {{ col | replace('_', ' ') | title }}
 {% else %}
-     - {{ col | capitalize }}
+     - {{ col | replace('_', ' ') | title }}
 {% endif %}
 {%- endfor %}
 {% else %}
@@ -47,6 +33,4 @@ My Notebook
 {% endif %}
 {%- endfor %}
 {% endif %}
-{% endif %}
-
-{%- endfor %}
+{% endblock section %}

@@ -1,23 +1,7 @@
-===================
-My Notebook
-===================
+{% extends "base.rst.jinja" %}
 
-{% set headers = (
-    '',
-    '========================================',
-    '----------------------------------------',
-    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    )
-%}
 
-{% macro dump_children(children) -%}
-{%- endmacro %}
-
-{% for node in nodes -%}
-
-{% if not node.is_leaf %}
-{{ node.name | replace('_', ' ') | title }}
-{{ headers[node.depth] }}
+{% block section %}
 
 {% if node.children | selectattr("is_leaf") | list | count -%}
 .. list-table::
@@ -36,6 +20,4 @@ My Notebook
 {%- endfor %}
 
 {% endif %}
-{% endif %}
-
-{%- endfor %}
+{% endblock section %}

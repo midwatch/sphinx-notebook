@@ -73,8 +73,12 @@ def new_note(template_dir, template_name, dst):
 
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_note(ENV.get_template(template_name), out)
+    try:
+        with output.open(encoding='utf-8', mode='x') as out:
+            notebook.render_note(ENV.get_template(template_name), out)
+
+    except FileExistsError as file_exists:
+        raise click.FileError(output, 'file exists') from file_exists
 
     return 0
 

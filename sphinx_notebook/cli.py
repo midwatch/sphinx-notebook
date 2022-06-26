@@ -1,9 +1,10 @@
 """Console script for Sphinx Notebook."""
-
+import os
 import sys
 from pathlib import Path
 
 import click
+import yaml
 from jinja2 import (Environment, FileSystemLoader, PackageLoader,
                     select_autoescape)
 
@@ -16,9 +17,9 @@ ENV.filters["to_table"] = filters.to_table
 
 
 @click.group()
+@click.version_option(version='0.8.0')
 def main():
     """Empty click anchor function."""
-
 
 @click.group()
 def new():
@@ -31,11 +32,9 @@ def new():
 @click.option('--template-name',
               default='index.rst.jinja',
               help="Use alt index template")
-@click.option('--title', default="My Notebook", help="Notebook title")
-@click.option('--header', default=None, help="Notebook header")
 @click.argument('src')
 @click.argument('dst')
-def build(prune, template_dir, template_name, title, header, src, dst):  # pylint: disable=too-many-arguments
+def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-many-arguments
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -52,9 +51,12 @@ def build(prune, template_dir, template_name, title, header, src, dst):  # pylin
     notebook.prune_tree(root, prune)
     notebook.update_meta_data(root_dir, root)
 
-    with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_index(root, title, header,
-                              ENV.get_template(template_name), out)
+    with (root_dir / '_meta.yaml').open() as fd_in:
+        meta_data =  yaml.safe_load(fd_in)
+
+        with output.open(encoding='utf-8', mode='w') as out:
+            notebook.render_index(root, meta_data['title'], meta_data['header'],
+                                  ENV.get_template(template_name), out)
 
     return 0
 

@@ -17,7 +17,7 @@ ENV.filters["to_table"] = filters.to_table
 
 
 @click.group()
-@click.version_option(version='0.8.0')
+@click.version_option(version='0.8.1')
 def main():
     """Empty click anchor function."""
 

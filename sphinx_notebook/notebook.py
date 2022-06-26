@@ -192,7 +192,7 @@ def update_meta_data(root_dir, root):
     """
     resolver = anytree.resolver.Resolver()
 
-    for meta_file in root_dir.glob('**/meta.yaml'):
+    for meta_file in root_dir.glob('**/*/_meta.yaml'):
         meta_data = _get_meta_data(meta_file)
 
         target = str(meta_file.relative_to(root_dir).parent)

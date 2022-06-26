@@ -1,5 +1,5 @@
 """Console script for Sphinx Notebook."""
-
+import os
 import sys
 from pathlib import Path
 
@@ -16,9 +16,9 @@ ENV.filters["to_table"] = filters.to_table
 
 
 @click.group()
+@click.version_option(version='0.7.0')
 def main():
     """Empty click anchor function."""
-
 
 @click.group()
 def new():

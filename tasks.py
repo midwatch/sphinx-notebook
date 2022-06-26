@@ -166,19 +166,13 @@ def release(ctx):
 
 @task(clean)
 def test_accept(ctx):
-    header = """::
-
-    Never memorize something that you can look up.
-
-                                   Albert Einstein
-    """
     """Build notebook"""
     ctx.run('mkdir -p build/simple')
     ctx.run('cp -r tests/fixtures/notes/simple build/simple/rst')
     ctx.run('poetry run sphinx_notebook new note build/simple/rst/section_4/test_note.rst')
     ctx.run("sed -i 's/New Note/Test Note/' build/simple/rst/section_4/test_note.rst")
 
-    ctx.run(f'poetry run sphinx_notebook build --title "Simple Notebook" --header "{header}" build/simple/rst build/simple/rst/index.rst')
+    ctx.run(f'poetry run sphinx_notebook build build/simple/rst build/simple/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/simple/rst build/simple/www')
 
     """Build pruned notebook"""
@@ -191,7 +185,7 @@ def test_accept(ctx):
     ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
     ctx.run("sed -i 's/New Note/Test Prun Note 2/' build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst")
 
-    ctx.run(f'poetry run sphinx_notebook build --title "Pruned Notebook" build/pruned/rst build/pruned/rst/index.rst')
+    ctx.run(f'poetry run sphinx_notebook build build/pruned/rst build/pruned/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
 
 
@@ -199,7 +193,7 @@ def test_accept(ctx):
     ctx.run('mkdir -p build/table')
     ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
 
-    ctx.run(f'poetry run sphinx_notebook build --template-name index_table.rst.jinja --title "Table Notebook" build/table/rst build/table/rst/index.rst')
+    ctx.run(f'poetry run sphinx_notebook build --template-name index_table.rst.jinja build/table/rst build/table/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
 
 

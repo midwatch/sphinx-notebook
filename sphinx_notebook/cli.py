@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import click
+import yaml
 from jinja2 import (Environment, FileSystemLoader, PackageLoader,
                     select_autoescape)
 
@@ -52,9 +53,12 @@ def build(prune, template_dir, template_name, title, header, src, dst):  # pylin
     notebook.prune_tree(root, prune)
     notebook.update_meta_data(root_dir, root)
 
-    with output.open(encoding='utf-8', mode='w') as out:
-        notebook.render_index(root, title, header,
-                              ENV.get_template(template_name), out)
+    with (root_dir / '_meta.yaml').open() as fd_in:
+        meta_data =  yaml.safe_load(fd_in)
+
+        with output.open(encoding='utf-8', mode='w') as out:
+            notebook.render_index(root, meta_data['title'], meta_data['header'],
+                                  ENV.get_template(template_name), out)
 
     return 0
 

@@ -1,3 +1,4 @@
 invoke
 pip
 poetry
+mw_dry_invoke

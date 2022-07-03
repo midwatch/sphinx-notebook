@@ -21,6 +21,7 @@ ENV.filters["to_table"] = filters.to_table
 def main():
     """Empty click anchor function."""
 
+
 @click.group()
 def new():
     """Empty click anchor function."""
@@ -52,10 +53,11 @@ def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-
     notebook.update_meta_data(root_dir, root)
 
     with (root_dir / '_meta.yaml').open() as fd_in:
-        meta_data =  yaml.safe_load(fd_in)
+        meta_data = yaml.safe_load(fd_in)
 
         with output.open(encoding='utf-8', mode='w') as out:
-            notebook.render_index(root, meta_data['title'], meta_data['header'],
+            notebook.render_index(root, meta_data['title'],
+                                  meta_data['header'],
                                   ENV.get_template(template_name), out)
 
     return 0

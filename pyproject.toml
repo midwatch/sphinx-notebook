@@ -36,6 +36,7 @@ pycodestyle = "*"
 pydocstyle = "*"
 pylint = "*"
 pytest = "*"
+toml = "*"
 yapf = "*"
 Sphinx = "*"
 

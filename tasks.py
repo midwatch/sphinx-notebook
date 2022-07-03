@@ -4,6 +4,8 @@ from invoke import Collection
 from invoke import task
 from invoke.exceptions import Failure
 
+from mw_dry_invoke import git
+
 GITHUB_USERNAME = "midwatch"
 GITHUB_SLUG = "sphinx-notebook"
 SOLUTION_SLUG = "sphinx_notebook"
@@ -57,55 +59,15 @@ def lint_pylint(ctx):
     ctx.run(f'poetry run pylint {PYTHON_DIRS_STR}')
 
 
-@task
-def scm_init(ctx):
-    """Init scm repo (if required).
-
-    Raises:
-        Failure: .gitignore does not exist
-
-    Returns:
-        None
-    """
-    if not Path('.gitignore').is_file():
-        raise Failure('.gitignore does not exist')
-
-    if not Path('.git').is_dir():
-        uri_remote = 'git@github.com:{}/{}.git'.format(GITHUB_USERNAME,
-                                                       GITHUB_SLUG
-                                                      )
-
-        ctx.run('git init')
-        ctx.run('git add .')
-        ctx.run('git commit -m "new package from midwatch/cc-py3-pkg ({})"'.format(CC_VERSION))
-        ctx.run('git branch -M main')
-        ctx.run('git remote add origin {}'.format(uri_remote))
-        ctx.run('git tag -a "v_0.0.0" -m "cookiecutter ref"')
-
-
-@task
-def scm_push(ctx):
-    """Push all branches and tags to origin."""
-
-    for branch in ('develop', 'main'):
-        ctx.run('git push origin {}'.format(branch))
-
-    ctx.run('git push --tags')
-
-
-@task
-def scm_status(ctx):
-    """Show status of remote branches."""
-    ctx.run('git for-each-ref --format="%(refname:short) %(upstream:track)" refs/heads')
-
-
-@task(help={'part': "major, minor, or patch"})
+@task(help={'part': "major, minor, or patch/hotfix"})
 def bumpversion(ctx, part):
     """Bump project version
 
     Raises:
         Failure: part not in [major, minor, patch]
     """
+    part = 'patch' if part == 'hotfix' else part
+
     if part not in ['major', 'minor', 'patch']:
         raise Failure('Not a valid part')
 
@@ -129,7 +91,7 @@ def build(ctx):
 
 
 @task(help={'check': "Checks if source is formatted without applying changes"})
-def format(ctx, check=False):
+def format_yapf(ctx, check=False):
     """Format code"""
     yapf_options = '--recursive {}'.format('--diff' if check else '--in-place')
     ctx.run(f'poetry run yapf {yapf_options} {PYTHON_DIRS_STR}')
@@ -139,16 +101,10 @@ def format(ctx, check=False):
 
 
 @task
-def init(ctx):
+def init_repo(ctx):
     """Initialize freshly cloned repo"""
     ctx.run('poetry install')
-
-    scm_init(ctx)
-
-    ctx.run('git flow init -d')
-    ctx.run('git flow config set versiontagprefix v_')
-
-    scm_push(ctx)
+    git.init(ctx)
 
 
 @task(lint_pylint, lint_pycodestyle, lint_pydocstyle)
@@ -208,9 +164,7 @@ def test(ctx):
     """Run tests"""
 
 
-scm = Collection()
-scm.add_task(scm_push, name="push")
-scm.add_task(scm_status, name="status")
+ns = Collection(build, bumpversion, clean, init_repo, lint, release, test)
+ns.add_task(format_yapf, name="format")
 
-ns = Collection(build, bumpversion, clean, format, init, lint, release, test, test_accept, test_pytest)
-ns.add_collection(scm, name="scm")
+ns.add_collection(git.collection, name="scm")

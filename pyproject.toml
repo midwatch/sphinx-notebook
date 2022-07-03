@@ -32,7 +32,6 @@ PyYAML = "^6.0"
 [tool.poetry.dev-dependencies]
 bump2version = "*"
 isort = "*"
-mw_dry_invoke = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 pylint = "*"

@@ -9,11 +9,11 @@
 {% for row in node.children | selectattr("is_leaf") | batch(4, '') -%}
 {% for col in row -%}
 {% if loop.first %}
-{{ "    * - :doc:`%s <%s>`"|format(col.title, col.target) }}
+{{ "    * - :doc:`%s <%s>`"|format(col.title, col.url) }}
 {% elif col == '' %}
 {{ "      - " }}
 {% else %}
-{{ "      - :doc:`%s <%s>`"|format(col.title, col.target) }}
+{{ "      - :doc:`%s <%s>`"|format(col.title, col.url) }}
 {% endif %}
 {%- endfor %}
 

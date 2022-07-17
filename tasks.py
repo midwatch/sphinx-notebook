@@ -122,35 +122,41 @@ def release(ctx):
 
 @task(clean)
 def test_accept(ctx):
-    """Build notebook"""
     ctx.run('mkdir -p build/simple')
     ctx.run('cp -r tests/fixtures/notes/simple build/simple/rst')
-    ctx.run('poetry run sphinx_notebook new note build/simple/rst/section_4/test_note.rst')
-    ctx.run("sed -i 's/New Note/Test Note/' build/simple/rst/section_4/test_note.rst")
 
     ctx.run(f'poetry run sphinx_notebook build build/simple/rst build/simple/rst/index.rst')
     ctx.run('poetry run sphinx-build -b html build/simple/rst build/simple/www')
 
-    """Build pruned notebook"""
-    ctx.run('mkdir -p build/pruned')
-    ctx.run('cp -r tests/fixtures/notes/simple build/pruned/rst')
+    # """Build notebook"""
+    # ctx.run('mkdir -p build/simple')
+    # ctx.run('cp -r tests/fixtures/notes/simple build/simple/rst')
+    # ctx.run('poetry run sphinx_notebook new note build/simple/rst/section_4/test_note.rst')
+    # ctx.run("sed -i 's/New Note/Test Note/' build/simple/rst/section_4/test_note.rst")
 
-    ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_1/_include/inc_note_1.rst')
-    ctx.run("sed -i 's/New Note/Test Prun Note 1/' build/pruned/rst/section_1/_include/inc_note_1.rst")
+    # ctx.run(f'poetry run sphinx_notebook build build/simple/rst build/simple/rst/index.rst')
+    # ctx.run('poetry run sphinx-build -b html build/simple/rst build/simple/www')
 
-    ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
-    ctx.run("sed -i 's/New Note/Test Prun Note 2/' build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst")
+    # """Build pruned notebook"""
+    # ctx.run('mkdir -p build/pruned')
+    # ctx.run('cp -r tests/fixtures/notes/simple build/pruned/rst')
 
-    ctx.run(f'poetry run sphinx_notebook build build/pruned/rst build/pruned/rst/index.rst')
-    ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
+    # ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_1/_include/inc_note_1.rst')
+    # ctx.run("sed -i 's/New Note/Test Prun Note 1/' build/pruned/rst/section_1/_include/inc_note_1.rst")
+
+    # ctx.run('poetry run sphinx_notebook new note build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst')
+    # ctx.run("sed -i 's/New Note/Test Prun Note 2/' build/pruned/rst/section_2/sub_section_2.1/_include/inc_note_2.rst")
+
+    # ctx.run(f'poetry run sphinx_notebook build build/pruned/rst build/pruned/rst/index.rst')
+    # ctx.run('poetry run sphinx-build -b html build/pruned/rst build/pruned/www')
 
 
-    """Build table formatted notebook"""
-    ctx.run('mkdir -p build/table')
-    ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
+    # """Build table formatted notebook"""
+    # ctx.run('mkdir -p build/table')
+    # ctx.run('cp -r tests/fixtures/notes/table build/table/rst')
 
-    ctx.run(f'poetry run sphinx_notebook build --template-name index_table.rst.jinja build/table/rst build/table/rst/index.rst')
-    ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
+    # ctx.run(f'poetry run sphinx_notebook build --template-name index_table.rst.jinja build/table/rst build/table/rst/index.rst')
+    # ctx.run('poetry run sphinx-build -b html build/table/rst build/table/www')
 
 
 @task
@@ -164,7 +170,7 @@ def test(ctx):
     """Run tests"""
 
 
-ns = Collection(build, bumpversion, clean, init_repo, lint, release, test)
+ns = Collection(build, bumpversion, clean, init_repo, lint, release, test, test_pytest)
 ns.add_task(format_yapf, name="format")
 
 ns.add_collection(git.collection, name="scm")

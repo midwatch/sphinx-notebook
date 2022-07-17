@@ -1,77 +1,58 @@
 """Main module."""
 import string
+import dataclasses
 from itertools import chain
+from pathlib import Path
+from typing import Dict
+from typing import List
 
 import anytree
 import nanoid
 import yaml
 
+from . import util
+
 NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NANOID_SIZE = 10
 
+@dataclasses.dataclass
+class Note:
+    root_dir: Path
+    path: Path
+    group: str = dataclasses.field(init=False)
+    name: str = dataclasses.field(init=False)
+    parents: List[str] = dataclasses.field(init=False)
+    title: str = dataclasses.field(init=False)
+    url: str = dataclasses.field(init=False)
 
-def _get_meta_data(meta_file):
-    """Parse meta data yaml file.
+    def __post_init__(self):
+        target = self.path.relative_to(self.root_dir)
 
-    :param meta_file: meta_data file
-    :type meta_file: class: `pathlib.Path`
+        self.group = util.parse_stem(self.path.stem)
+        self.name = self.path.name
+        self.parents = [util.to_title_case(x) for x in target.parts[:-1]]
+        self.title = util.get_title(self.path)
+        self.url = f'/{target.parent}/{target.stem}'
 
-    :return: Directory meta data
-    :rrtype: dict
+
+def get_notes(root_dir: Path, *, filter_: str ='_include' , note_pattern: str = '**/*.rst',
+    meta_pattern: str ='**/*/_meta.yaml') -> (List[Note], Dict):
     """
-    with meta_file.open() as fd_in:
-        return yaml.safe_load(fd_in)
-
-
-def _get_title(note):
-    """Extract title from note.
-
-    :param note: path not note file
-    :type note: class: `pathlib.path`
-
-    :return: Note title
-    :rrtype: str
     """
-    title = note.stem
+    notes = [Note(root_dir, x) for x in sorted(root_dir.glob(note_pattern)) if filter_ not in x.parts]
 
-    with note.open(encoding="utf-8") as fd_in:
-        found_line = False
+    meta_data = {}
 
-        for line in fd_in.readlines():
-            if "=======" in line:  # pylint: disable=no-else-continue
-                found_line = True
-                continue
+    for meta_file in root_dir.glob(meta_pattern):
+        node = util.to_title_case(str(meta_file.relative_to(root_dir).parent))
 
-            elif found_line:
-                title = line.strip()
-                break
-
-    return title
+        with meta_file.open() as fd_in:
+            payload = yaml.safe_load(fd_in)
 
 
-def _parse_stem(stem):
-    """Extract group from note file stem.
+        meta_data[node] = payload
 
-    :param stem: Path.stem()
-    :type stem: str
-
-    :return: Note group
-    :rrtype: str
-    """
-    tokens = stem.split('__')
-
-    if len(tokens) == 1:
-        return None
-
-    if len(tokens) == 3:
-        return tokens[0]
-
-    try:
-        _ = int(tokens[0])
-        return None
-
-    except ValueError:
-        return tokens[0]
+    return (notes, meta_data)
 
 
 def get_target():
@@ -83,62 +64,34 @@ def get_target():
     return nanoid.generate(NANOID_ALPHABET, NANOID_SIZE)
 
 
-def get_tree(root_dir):
-    """Get a tree of notes.
 
-    :param root_dir: The root directory of the notebook
-    :type root_dir: class: `pathlib.Path`
+def to_tree(notes: List[Note], meta_data: Dict) -> anytree.Node:
+    """Get a tree of notes from a list of notes and override meta data."""
+    ROOT_NAME = "root"
+    nodes = {ROOT_NAME: anytree.Node(ROOT_NAME)}
+    resolver = anytree.resolver.Resolver()
 
-    :return: Tree root node
-    :rtype: class: anytree.Node
-    """
-    # print(root_dir)
-    # build/notes/rst
-    nodes = {root_dir.name: anytree.Node(root_dir.name)}
-
-    for note in sorted(root_dir.glob('**/*.rst')):
-
-        tmp = note.relative_to(root_dir)
-        target = f'/{tmp.parent}/{tmp.stem}'  # /1._overview/0_readme
-
+    for note in notes:
         parts = []
 
-        for part in chain([root_dir.name], tmp.parts[:-1]):
+        for part in chain([ROOT_NAME], note.parents):
             parts.append(part)
 
             if '/'.join(parts) not in nodes:
                 parent = nodes['/'.join(parts[:-1])]
-                display_name = string.capwords(part.replace('_', ' '))
-                nodes['/'.join(parts)] = anytree.Node(
-                    part, display_name=display_name, parent=parent)
+                nodes['/'.join(parts)] = anytree.Node(part, title=part, parent=parent)
 
         anytree.Node(note.name,
-                     group=_parse_stem(note.stem),
-                     parent=nodes['/'.join(parts)],
-                     title=_get_title(note),
-                     target=target)
+                     group = note.group,
+                     parent = nodes['/'.join(parts)],
+                     title = note.title,
+                     url = note.url)
 
-    return nodes[root_dir.name]
+    for target, payload in meta_data.items():
+        node = resolver.get(nodes[ROOT_NAME], f'/{ROOT_NAME}/{target}')
+        node.title = payload['title']
 
-
-def prune_tree(root, prune):
-    """Prune nodes that shouldn't be rendered on the index page.
-
-    :param root: Root node of the notes tree
-    :type root: anytree.Node
-
-    :param prune: An tuple of node names to be pruned
-    :type prune: tuple
-
-    :return: None
-    """
-    for node in anytree.search.findall(
-            root, filter_=lambda node: node.name[0] == '_'):
-        node.parent = None
-
-    for node in anytree.search.findall(
-            root, filter_=lambda node: node.name in prune):
-        node.parent = None
+    return nodes[ROOT_NAME]
 
 
 def render_index(root, title, header, template, out):
@@ -177,24 +130,3 @@ def render_note(template, out):
     """
     note_id = get_target()
     out.write(template.render(note_id=note_id))
-
-
-def update_meta_data(root_dir, root):
-    """Update directory meta data using meta.yaml file.
-
-    :param root_dir: The root directory of the notebook
-    :type root_dir: class: `pathlib.Path`
-
-    :param root: notebook tree root node
-    :type root: class: anytree.Node
-
-    :return: None
-    """
-    resolver = anytree.resolver.Resolver()
-
-    for meta_file in root_dir.glob('**/*/_meta.yaml'):
-        meta_data = _get_meta_data(meta_file)
-
-        target = str(meta_file.relative_to(root_dir).parent)
-        node = resolver.get(root, target)
-        node.display_name = meta_data['display_name']

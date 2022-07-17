@@ -20,14 +20,14 @@
 {% for col in row -%}
 {% if loop.first %}
 {% if col %}
-{{ "   * - :doc:`%s <%s>`"|format(col.title, col.target) }}
+{{ "   * - :doc:`%s <%s>`"|format(col.title, col.url) }}
 {% else %}
    * -
 {% endif %}
 {% elif not col %}
      -
 {% else %}
-{{ "     - :doc:`%s <%s>`"|format(col.title, col.target) }}
+{{ "     - :doc:`%s <%s>`"|format(col.title, col.url) }}
 {% endif %}
 {%- endfor %}
 {% endif %}

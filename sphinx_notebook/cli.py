@@ -42,26 +42,22 @@ def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-
 
     DST: path to index.rst (eg build/src/index.rst)
     """
-    if template_dir:
-        ENV.loader = FileSystemLoader(template_dir)
+    dir_src = Path(src)
+    index_out = Path(dst)
 
-    root_dir = Path(src)
-    output = Path(dst)
+    notes, meta_data = notebook.get_notes(dir_src)
 
-    root = notebook.get_tree(root_dir)
-    notebook.prune_tree(root, prune)
-    notebook.update_meta_data(root_dir, root)
+    tree = notebook.to_tree(notes, meta_data)
 
-    with (root_dir / '_meta.yaml').open() as fd_in:
-        meta_data = yaml.safe_load(fd_in)
+    with (dir_src / '_meta.yaml').open() as fd_in:
+        template_meta_data = yaml.safe_load(fd_in)
 
-        with output.open(encoding='utf-8', mode='w') as out:
-            notebook.render_index(root, meta_data['title'],
-                                  meta_data['header'],
-                                  ENV.get_template(template_name), out)
+        with index_out.open(encoding='utf-8', mode='w') as fd_out:
+            notebook.render_index(tree, template_meta_data['title'],
+                                  template_meta_data['header'],
+                                  ENV.get_template(template_name), fd_out)
 
     return 0
-
 
 @click.command()
 @click.option('--template-dir', default=None, help="path to custom templates")

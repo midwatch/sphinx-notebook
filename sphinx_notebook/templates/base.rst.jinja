@@ -18,7 +18,7 @@
 {% for node in nodes -%}
 
 {% if not node.is_leaf %}
-{{ node.display_name }}
+{{ node.title }}
 {{ headers[node.depth] }}
 
 {% block section scoped %}

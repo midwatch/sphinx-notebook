@@ -49,13 +49,12 @@ def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-
 
     tree = notebook.to_tree(notes, meta_data)
 
-    with (dir_src / '_meta.yaml').open() as fd_in:
-        template_meta_data = yaml.safe_load(fd_in)
+    index_meta = meta_data[0]
 
-        with index_out.open(encoding='utf-8', mode='w') as fd_out:
-            notebook.render_index(tree, template_meta_data['title'],
-                                  template_meta_data['header'],
-                                  ENV.get_template(template_name), fd_out)
+    with index_out.open(encoding='utf-8', mode='w') as fd_out:
+        notebook.render_index(tree, index_meta.title,
+                              index_meta.header,
+                              ENV.get_template(template_name), fd_out)
 
     return 0
 

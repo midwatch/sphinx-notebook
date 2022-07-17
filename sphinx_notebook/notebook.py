@@ -16,6 +16,22 @@ NANOID_ALPHABET = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 NANOID_SIZE = 10
 
 @dataclasses.dataclass
+class MetaData:
+
+    title: str
+    name: str
+    header: str = dataclasses.field(default='')
+
+    @classmethod
+    def from_yaml(cls, root_dir, path):
+        with path.open() as fd_in:
+            payload = yaml.safe_load(fd_in)
+
+        payload['name'] = util.to_title_case(str(path.relative_to(root_dir).parent))
+        return cls(**payload)
+
+
+@dataclasses.dataclass
 class Note:
     root_dir: Path
     path: Path
@@ -36,21 +52,12 @@ class Note:
 
 
 def get_notes(root_dir: Path, *, filter_: str ='_include' , note_pattern: str = '**/*.rst',
-    meta_pattern: str ='**/*/_meta.yaml') -> (List[Note], Dict):
+    meta_pattern: str ='**/_meta.yaml') -> (List[Note], List[MetaData]):
     """
     """
     notes = [Note(root_dir, x) for x in sorted(root_dir.glob(note_pattern)) if filter_ not in x.parts]
 
-    meta_data = {}
-
-    for meta_file in root_dir.glob(meta_pattern):
-        node = util.to_title_case(str(meta_file.relative_to(root_dir).parent))
-
-        with meta_file.open() as fd_in:
-            payload = yaml.safe_load(fd_in)
-
-
-        meta_data[node] = payload
+    meta_data = [MetaData.from_yaml(root_dir, x) for x in root_dir.glob(meta_pattern)]
 
     return (notes, meta_data)
 
@@ -87,9 +94,9 @@ def to_tree(notes: List[Note], meta_data: Dict) -> anytree.Node:
                      title = note.title,
                      url = note.url)
 
-    for target, payload in meta_data.items():
-        node = resolver.get(nodes[ROOT_NAME], f'/{ROOT_NAME}/{target}')
-        node.title = payload['title']
+    for meta in meta_data:
+        node = resolver.get(nodes[ROOT_NAME], f'/{ROOT_NAME}/{meta.name}')
+        node.title = meta.title
 
     return nodes[ROOT_NAME]
 

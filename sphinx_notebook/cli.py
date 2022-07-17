@@ -1,10 +1,8 @@
 """Console script for Sphinx Notebook."""
-import os
 import sys
 from pathlib import Path
 
 import click
-import yaml
 from jinja2 import (Environment, FileSystemLoader, PackageLoader,
                     select_autoescape)
 
@@ -28,14 +26,12 @@ def new():
 
 
 @click.command()
-@click.option('--prune', multiple=True)
-@click.option('--template-dir', default=None, help="path to custom templates")
 @click.option('--template-name',
               default='index.rst.jinja',
               help="Use alt index template")
 @click.argument('src')
 @click.argument('dst')
-def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-many-arguments
+def build(template_name, src, dst):  # pylint: disable=too-many-arguments
     """Render an index.rst file for a sphinx based notebook.
 
     SRC: path to source directory (eg notebook/)
@@ -52,11 +48,11 @@ def build(prune, template_dir, template_name, src, dst):  # pylint: disable=too-
     index_meta = meta_data[0]
 
     with index_out.open(encoding='utf-8', mode='w') as fd_out:
-        notebook.render_index(tree, index_meta.title,
-                              index_meta.header,
+        notebook.render_index(tree, index_meta.title, index_meta.header,
                               ENV.get_template(template_name), fd_out)
 
     return 0
+
 
 @click.command()
 @click.option('--template-dir', default=None, help="path to custom templates")

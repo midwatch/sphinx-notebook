@@ -2,6 +2,7 @@
 import string
 from pathlib import Path
 
+
 def get_title(path: Path) -> str:
     """Extract title from note."""
     found_line = False
@@ -19,9 +20,9 @@ def get_title(path: Path) -> str:
 
     return title
 
+
 def parse_stem(stem: str) -> str:
     """Extract group name from note stem."""
-
     tokens = stem.split('__')
 
     if len(tokens) == 1:

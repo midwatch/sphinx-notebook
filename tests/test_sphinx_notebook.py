@@ -4,13 +4,12 @@
 import dataclasses
 from pathlib import Path
 
-from sphinx_notebook import notebook
-from sphinx_notebook import util
+from sphinx_notebook import notebook, util
 
 
 def test_get_title():
     """Test extract title from note."""
-    path =  Path('tests/fixtures/notes/simple/cad_cam_make/my_cad_note.rst')
+    path = Path('tests/fixtures/notes/simple/cad_cam_make/my_cad_note.rst')
 
     expected = 'My CAD Note'
     result = util.get_title(path)
@@ -34,9 +33,14 @@ def test_parse_stem():
 
 
 def test_meta_data():
+    """Test MetaData class."""
     root_dir = Path('tests/fixtures/notes/simple')
     path = root_dir / Path('_meta.yaml')
-    expected = {'title': "Simple Notebook", 'header': "Simple Notebook Header", 'name': '.'}
+    expected = {
+        'title': "Simple Notebook",
+        'header': "Simple Notebook Header",
+        'name': '.'
+    }
 
     meta_data = notebook.MetaData.from_yaml(root_dir, path)
     assert expected == dataclasses.asdict(meta_data)

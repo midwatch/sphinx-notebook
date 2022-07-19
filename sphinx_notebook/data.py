@@ -16,6 +16,7 @@ class MetaData:
     path: str
     header: str = dataclasses.field(default='')
     title: str = dataclasses.field(default=None)
+    column_order: List[str] = dataclasses.field(default_factory=list)
 
     @classmethod
     def from_yaml(cls, root_dir, path):
@@ -28,7 +29,7 @@ class MetaData:
 
     def to_dict(self):
         """Return meta data as dict."""
-        data = {'header': self.header}
+        data = {'header': self.header, 'column_order': self.column_order}
 
         if self.title:
             data['title'] = self.title
@@ -47,6 +48,17 @@ class Node(anytree.Node):
         if parents:
             yield parents[0]
             yield from self._recursive_parents(parents[1:])
+
+    @property
+    def groups(self):
+        """Return groups names."""
+        try:
+            column_order = self.column_order
+
+        except AttributeError:
+            column_order = sorted({x.group for x in self.notes if x.group})
+
+        return column_order
 
     @property
     def notes(self):

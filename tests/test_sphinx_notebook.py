@@ -39,14 +39,20 @@ def test_meta_data():
     expected = {
         'title': "Test Notebook",
         'header': "Test Notebook Header",
-        'path': '.'
+        'path': '.',
+        'column_order': []
     }
 
     meta_data = data.MetaData.from_yaml(root_dir, path)
     assert expected == dataclasses.asdict(meta_data)
 
     path = root_dir / Path('cad_cam_make/_meta.yaml')
-    expected = {'title': "CAD/CAM/MAKE", 'header': '', 'path': 'cad_cam_make'}
+    expected = {
+        'title': "CAD/CAM/MAKE",
+        'header': '',
+        'path': 'cad_cam_make',
+        'column_order': []
+    }
 
     meta_data = data.MetaData.from_yaml(root_dir, path)
     assert expected == dataclasses.asdict(meta_data)

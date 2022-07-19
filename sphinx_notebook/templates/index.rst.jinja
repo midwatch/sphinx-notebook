@@ -21,7 +21,7 @@
 {{ headers[node.depth] }}
 {{ node.header }}
 
-{% for cell in node.notes | table_header %}
+{% for cell in node| table_header %}
 {% if loop.first %}
 .. list-table::
    :header-rows: 1
@@ -36,7 +36,7 @@
 
 {%- endfor %}
 
-{% for row in node.notes | table_body %}
+{% for row in node | table_body %}
 {% for cell in row %}
 {% if loop.first %}
    * - {{ cell | format_rst }}

@@ -14,18 +14,18 @@ def format_rst(cell):
 
 def table_header(node):
     """Return table header row."""
-    return node.groups
+    return node.groups()
 
 
 def table_body(node):
     """Return table rows."""
-    if not node.groups:
+    if not node.groups():
         return do_batch(node.notes, 4, fill_with="")
 
     notes = {
         key: list(value)
         for key, value in groupby(node.notes, lambda x: x.group)
     }
-    cols = [notes[x] for x in node.groups]
+    cols = [notes[x] for x in node.groups(overide_names=False)]
 
     return zip_longest(*cols, fillvalue=None)

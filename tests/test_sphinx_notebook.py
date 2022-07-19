@@ -40,7 +40,8 @@ def test_meta_data():
         'title': "Test Notebook",
         'header': "Test Notebook Header",
         'path': '.',
-        'column_order': []
+        'column_order': [],
+        'column_names': []
     }
 
     meta_data = data.MetaData.from_yaml(root_dir, path)
@@ -51,7 +52,8 @@ def test_meta_data():
         'title': "CAD/CAM/MAKE",
         'header': '',
         'path': 'cad_cam_make',
-        'column_order': []
+        'column_order': [],
+        'column_names': []
     }
 
     meta_data = data.MetaData.from_yaml(root_dir, path)

@@ -39,6 +39,6 @@ def parse_stem(stem: str) -> str:
         return tokens[0]
 
 
-def to_title_case(title: str) -> str:
+def to_title_case(title: str, ) -> str:
     """Convert title to title case."""
-    return string.capwords(title.replace('_', ' '))
+    return string.capwords(title, sep='_').replace('_', ' ')

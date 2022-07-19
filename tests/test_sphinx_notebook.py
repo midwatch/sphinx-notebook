@@ -4,7 +4,7 @@
 import dataclasses
 from pathlib import Path
 
-from sphinx_notebook import notebook, util
+from sphinx_notebook import data, util
 
 
 def test_get_title():
@@ -39,16 +39,16 @@ def test_meta_data():
     expected = {
         'title': "Simple Notebook",
         'header': "Simple Notebook Header",
-        'name': '.'
+        'path': '.'
     }
 
-    meta_data = notebook.MetaData.from_yaml(root_dir, path)
+    meta_data = data.MetaData.from_yaml(root_dir, path)
     assert expected == dataclasses.asdict(meta_data)
 
     path = root_dir / Path('cad_cam_make/_meta.yaml')
-    expected = {'title': "CAD/CAM/MAKE", 'header': '', 'name': 'Cad Cam Make'}
+    expected = {'title': "CAD/CAM/MAKE", 'header': '', 'path': 'cad_cam_make'}
 
-    meta_data = notebook.MetaData.from_yaml(root_dir, path)
+    meta_data = data.MetaData.from_yaml(root_dir, path)
     assert expected == dataclasses.asdict(meta_data)
 
 
@@ -57,9 +57,9 @@ def test_note():
     root_dir = Path('tests/fixtures/notes/simple/')
     path = root_dir / 'cad_cam_make/my_cad_note.rst'
 
-    note = notebook.Note(root_dir, path)
+    note = data.Note.from_path(root_dir, path)
 
     assert note.group == ''
     assert note.url == '/cad_cam_make/my_cad_note'
     assert note.title == 'My CAD Note'
-    assert note.parents == ['Cad Cam Make']
+    assert note.parents == ['cad_cam_make']

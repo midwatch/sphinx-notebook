@@ -10,7 +10,7 @@
 {% for col in row -%}
 {% if loop.first %}
 {{ "    * - :doc:`%s <%s>`"|format(col.title, col.url) }}
-{% elif col == '' %}
+{% elif not col %}
 {{ "      - " }}
 {% else %}
 {{ "      - :doc:`%s <%s>`"|format(col.title, col.url) }}

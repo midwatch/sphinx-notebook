@@ -1,19 +1,29 @@
 """Template Filters."""
-from itertools import zip_longest
+from itertools import groupby, zip_longest
+
+from jinja2.filters import do_batch
 
 
-def to_table(value):
-    """Convert the results of groupby to a table."""
-    header = []
-    nodes = []
+def format_rst(cell):
+    """Format cell for rst list table."""
+    if cell:
+        return f':doc:`{cell.title} <{cell.url}>`'
 
-    for group, items in value:
-        header.append(group)
-        nodes.append(items)
+    return ""
 
-    retval = [header]
 
-    for row in zip_longest(*nodes):
-        retval.append(row)
+def table_header(notes):
+    """Return table header row."""
+    return {x.group for x in notes if x.group}
 
-    return retval
+
+def table_body(notes):
+    """Return table rows."""
+    if not table_header(notes):
+        return do_batch(notes, 4, fill_with="")
+
+    cols = []
+    for _, col in groupby(notes, lambda x: x.group):
+        cols.append(list(col))
+
+    return zip_longest(*cols, fillvalue=None)

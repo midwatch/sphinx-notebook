@@ -58,9 +58,14 @@ def render_index(root: anytree.Node, title: str, header: str,
                  template: jinja2.Template, out: IO[str]) -> None:
     """Render notebook tree into index.rst."""
     ctx = {
-        'title': title,
-        'header': header,
-        'nodes': [node for node in anytree.PreOrderIter(root) if node.depth]
+        'title':
+        title,
+        'header':
+        header,
+        'nodes': [
+            node for node in anytree.PreOrderIter(root)
+            if node.depth and not node.is_leaf
+        ]
     }
 
     out.write(template.render(ctx))

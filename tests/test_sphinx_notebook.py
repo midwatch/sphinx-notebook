@@ -9,7 +9,7 @@ from sphinx_notebook import data, util
 
 def test_get_title():
     """Test extract title from note."""
-    path = Path('tests/fixtures/notes/simple/cad_cam_make/my_cad_note.rst')
+    path = Path('tests/fixtures/notebook/cad_cam_make/my_cad_note.rst')
 
     expected = 'My CAD Note'
     result = util.get_title(path)
@@ -34,11 +34,11 @@ def test_parse_stem():
 
 def test_meta_data():
     """Test MetaData class."""
-    root_dir = Path('tests/fixtures/notes/simple')
+    root_dir = Path('tests/fixtures/notebook')
     path = root_dir / Path('_meta.yaml')
     expected = {
-        'title': "Simple Notebook",
-        'header': "Simple Notebook Header",
+        'title': "Test Notebook",
+        'header': "Test Notebook Header",
         'path': '.'
     }
 
@@ -54,7 +54,7 @@ def test_meta_data():
 
 def test_note():
     """Test Note class."""
-    root_dir = Path('tests/fixtures/notes/simple/')
+    root_dir = Path('tests/fixtures/notebook')
     path = root_dir / 'cad_cam_make/my_cad_note.rst'
 
     note = data.Note.from_path(root_dir, path)

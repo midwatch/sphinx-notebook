@@ -1,23 +1,48 @@
-{% extends "base.rst.jinja" %}
+===================
+{{ title }}
+===================
 
+{% set headers = (
+    '',
+    '========================================',
+    '----------------------------------------',
+    '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+    '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+    )
+%}
 
-{% block section %}
+{% if header %}
+{{ header }}
+{% endif %}
 
-{% if node.children | selectattr("is_leaf") | list | count -%}
-.. list-table::
+{% for node in nodes -%}
 
-{% for row in node.children | selectattr("is_leaf") | batch(4, '') -%}
-{% for col in row -%}
+{{ node.title }}
+{{ headers[node.depth] }}
+{{ node.header }}
+
+{% for cell in node.notes | table_header %}
 {% if loop.first %}
-{{ "    * - :doc:`%s <%s>`"|format(col.title, col.url) }}
-{% elif not col %}
-{{ "      - " }}
+.. list-table::
+   :header-rows: 1
+
+   * - {{ cell }}
 {% else %}
-{{ "      - :doc:`%s <%s>`"|format(col.title, col.url) }}
+     - {{ cell }}
 {% endif %}
-{%- endfor %}
+{% else %}
+.. list-table::
+{# padding #}
 
 {%- endfor %}
 
+{% for row in node.notes | table_body %}
+{% for cell in row %}
+{% if loop.first %}
+   * - {{ cell | format_rst }}
+{% else %}
+     - {{ cell | format_rst }}
 {% endif %}
-{% endblock section %}
+{% endfor %}
+{% endfor %}
+{% endfor %}

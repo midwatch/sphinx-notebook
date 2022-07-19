@@ -1,5 +1,6 @@
 """Data classes."""
 import dataclasses
+from string import capwords
 from typing import List
 
 import anytree
@@ -47,6 +48,11 @@ class Node(anytree.Node):
             yield parents[0]
             yield from self._recursive_parents(parents[1:])
 
+    @property
+    def notes(self):
+        """Return note nodes."""
+        return [x for x in self.children if x.is_leaf]
+
     def add_parents(self, parents):
         """Add parent nodes."""
         for parent in parents:
@@ -91,7 +97,7 @@ class Note:
         """Create a node class from a Path() object."""
         target = path.relative_to(root_dir)
 
-        group = util.parse_stem(path.stem)
+        group = capwords(util.parse_stem(path.stem).replace('_', ' '))
         name = path.name
         parents = list(target.parts[:-1])
         title = util.get_title(path)

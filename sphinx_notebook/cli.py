@@ -19,7 +19,7 @@ ENV.filters["table_body"] = filters.table_body
 @click.group()
 @click.version_option(version='0.8.1')
 def main():
-    """Empty click anchor function."""
+    """Build a Sphinx index.rst file from a directory of note files."""
 
 
 @click.group()

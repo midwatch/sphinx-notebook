@@ -103,8 +103,10 @@ def format_yapf(ctx, check=False):
 @task
 def init_repo(ctx):
     """Initialize freshly cloned repo"""
+    commit_msg = ''
+
     ctx.run('poetry install')
-    git.init(ctx)
+    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, commit_msg)
 
 
 @task(lint_pylint, lint_pycodestyle, lint_pydocstyle)
@@ -143,7 +145,8 @@ def test(ctx):
     """Run tests"""
 
 
-ns = Collection(build, bumpversion, clean, init_repo, lint, release, test, test_pytest)
+ns = Collection(build, bumpversion, clean, lint, release, test, test_pytest)
 ns.add_task(format_yapf, name="format")
+ns.add_task(init_repo, name='init')
 
 ns.add_collection(git.collection, name="scm")

@@ -106,7 +106,10 @@ def init_repo(ctx):
     commit_msg = ''
 
     ctx.run('poetry install')
-    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, commit_msg)
+
+    # ctx.run('git flow init -d')
+    # ctx.run('git flow config set versiontagprefix v_')
+    # git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, commit_msg)
 
 
 @task(lint_pylint, lint_pycodestyle, lint_pydocstyle)

@@ -17,7 +17,7 @@ ENV.filters["table_body"] = filters.table_body
 
 
 @click.group()
-@click.version_option(version='0.10.0')
+@click.version_option(version='0.10.1')
 def main():
     """Build a Sphinx index.rst file from a directory of note files."""
 

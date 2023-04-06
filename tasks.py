@@ -126,8 +126,8 @@ def release(ctx):
     Make a release of the python package to pypi
     """
     env = {
-        'PYPI_USERNAME': '__TOKEN__',
-        'PYPI_PASSWORD': config['TOKEN_PYPI']
+        'POETRY_HTTP_BASIC_PYPI_USERNAME': '__TOKEN__',
+        'POETRY_PYPI_TOKEN_PYPI': config['TOKEN_PYPI']
         }
 
     ctx.run("poetry publish", env=env)

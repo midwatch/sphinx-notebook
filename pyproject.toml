@@ -28,7 +28,7 @@ anytree = "^2.8.0"
 Jinja2 = "*"
 parse = "^1.19.0"
 PyYAML = "^6.0"
-MarkupSafe = "2.0.1"
+MarkupSafe = "*"
 
 [tool.poetry.dev-dependencies]
 bump2version = "*"

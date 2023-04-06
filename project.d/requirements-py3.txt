@@ -3,5 +3,6 @@ invoke
 mw_dry_invoke
 pip
 poetry
+python-dotenv
 urllib3
 zipp

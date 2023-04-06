@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from dotenv import dotenv_values
+
 from invoke import Collection
 from invoke import task
 from invoke.exceptions import Failure
@@ -17,6 +19,7 @@ TEST_DIR = ROOT_DIR.joinpath("tests")
 
 PYTHON_DIRS_STR = " ".join([str(_dir) for _dir in [SOURCE_DIR, TEST_DIR]])
 
+config = dotenv_values(".env-tokens")
 
 @task
 def clean_build(ctx):
@@ -122,7 +125,12 @@ def release(ctx):
     """
     Make a release of the python package to pypi
     """
-    ctx.run("poetry publish")
+    env = {
+        'PYPI_USERNAME': '__TOKEN__',
+        'PYPI_PASSWORD': config['TOKEN_PYPI']
+        }
+
+    ctx.run("poetry publish", env=env)
 
 
 @task(clean)

@@ -1,4 +1,7 @@
+chardet
 invoke
+mw_dry_invoke
 pip
 poetry
-mw_dry_invoke
+urllib3
+zipp
